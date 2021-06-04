@@ -12,7 +12,7 @@ query ($id: Int) { # Define which variables will be used in the query (id)
   }
 }
 '''
-
+udfygtdiufghdgd
 # Define our query variables and values that will be used in the query request
 variables = {
     'id': 15125
