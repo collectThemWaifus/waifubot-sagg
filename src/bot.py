@@ -17,4 +17,6 @@ client.run(token)
 #TODO: Create a caste system for waifu / husbandos
 # Use ANILIST for caste
 
+fsdfsdfsdjifksdjlkf
+
 # TODO: Create a user system for collecting
