@@ -12,5 +12,9 @@ async def on_message(message):
 
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
-token = 'NjIxMTYyMDUyMTA2MzIxOTQz.XXhUPQ.i5i_V6i9rHfzukDPMIPFjLE1YW0'
 client.run(token)
+
+#TODO: Create a caste system for waifu / husbandos
+# Use ANILIST for caste
+
+# TODO: Create a user system for collecting
