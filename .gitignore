@@ -1,5 +1,6 @@
 .vscode/*
 *.code-workspace
-
+__pycache__
+waifuUser.db
 # Local History for Visual Studio Code
 .history/
