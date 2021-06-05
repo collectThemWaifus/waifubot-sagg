@@ -1,4 +1,0 @@
-{
-    "nixEnvSelector.nixFile": "${workspaceRoot}/shell.nix",
-    "python.pythonPath": "C:\\Program Files\\Python39\\python.exe"
-}
