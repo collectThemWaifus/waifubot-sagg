@@ -64,7 +64,7 @@ async def waifu(ctx):
 
 
 
-client.run('ODQyODMyODc4NTU0MzE2ODM3.YJ7DSQ.qIFk7V5hj9Cel7VWaH0cMfwOKiE')
+client.run(token)
 
 #TODO: Create a caste system for waifu / husbandos
 # Use ANILIST for caste
