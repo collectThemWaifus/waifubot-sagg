@@ -11,6 +11,7 @@ in pkgs.mkShell {
   buildInputs = [
     python-env
     pkgs.poetry
+    pkgs.sqlite
   ];
 
 }
