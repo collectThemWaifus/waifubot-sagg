@@ -9,12 +9,13 @@ from discord.ext.commands import Bot
 from discord import Status
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix = '.', intents=intents)
+client = commands.Bot(command_prefix = '-', intents=intents)
 client.remove_command('help')
 
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
+    await client.change_presence(status=discord.Status.online, activity=discord.Game("Use -help for a list of commands"))
 
 @client.event
 async def on_message(message):
@@ -32,7 +33,7 @@ async def on_message(message):
 async def waifu(ctx):
     print("what")
     embed = discord.Embed(
-        title = 'Sample Waifu name', 
+        title = 'Sample Waifu name',
         description = 'Unclaimed',
         colour = discord.Colour.blue()
     )
@@ -62,9 +63,17 @@ async def waifu(ctx):
 
     #stores the user.name and the name of waifu and the image here
 
+@client.command(aliases = ['helpme'])
+async def help(ctx):
+    embed = discord.Embed(
+        title = 'Help menu for Waifu Bot', 
+        description = 'Commands:',
+        colour = discord.Colour.green()
+    )
+    embed.set_thumbnail(url = 'https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg')
+    await ctx.send(embed=embed)
 
-
-client.run(token)
+client.run('ODQyODMyODc4NTU0MzE2ODM3.YJ7DSQ.xMx2ddZCWmKg6aihGeb2esDGKYQ')
 
 #TODO: Create a caste system for waifu / husbandos
 # Use ANILIST for caste
