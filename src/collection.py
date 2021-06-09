@@ -1,24 +1,40 @@
 import requests
-# Here we define our query as a multi-line string
-query = '''
-query ($id: Int) { # Define which variables will be used in the query (id)
-  Media (id: $id, type: ANIME) { # Insert our variables into the query arguments (id) (type: ANIME is hard-coded in the query)
-    id
-    title {
-      romaji
-      english
-      native
-    }
-  }
-}
-'''
+from basemodels import Waifu
 
-# Define our query variables and values that will be used in the query request
-variables = {
-    'id': 15125
-}
+def findWaifu(ammount : int):
 
-url = 'https://graphql.anilist.co'
+  query = '''
+  query ($perpage: Int) { # Define which variables will be used in the query (id) 
+    Page(page: 50, perPage: $perpage) { 
+       characters(sort: FAVOURITES_DESC){
+          image{
+            medium
+          }
+          favourites
+          name {
+            full
+            
+          }
+        }
+      }
+    } 
 
-# Make the HTTP Api request
-response = requests.post(url, json={'query': query, 'variables': variables})
+  '''
+  variables = { 'perpage': ammount }
+
+  url = 'https://graphql.anilist.co'
+
+  # Make the HTTP Api request
+  parsedJson = requests.post(url, json={'query': query, 'variables': variables}).json()
+
+  #Create and return list of waifus
+  listOfWaifu = []
+  for character in parsedJson["data"]["Page"]['characters']:
+    newWaifu = Waifu(imageURL=character["image"]["medium"], name=character["name"]["full"], favourites=character["favourites"])
+    listOfWaifu.append(newWaifu)
+  return listOfWaifu
+
+
+for waifu in findWaifu(30):
+  print (waifu)
+

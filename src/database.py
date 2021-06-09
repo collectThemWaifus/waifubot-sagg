@@ -5,9 +5,9 @@ def databaseSetup():
     sql_waifuUserTable = '''
         CREATE TABLE IF NOT EXISTS userWaifu (
             userid char(38) NOT NULL,
-            female BOOL NOT NULL,
             name VARCHAR(100) NOT NULL,
-            age MEDIUMINT NOT NULL,
+            imageURL VARCHAR(100) NOT NULL,
+            favourites MEDIUMINT NOT NULL,
             time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (userid, time)
         );
@@ -19,7 +19,7 @@ def databaseSetup():
 
 def storeWaifu(waifu : Waifu, userid : str):
     databaseSetup()
-    sql_storeWaifu = "INSERT INTO userWaifu (userid, female, name, age) VALUES (?, ?, ?, ?)"
+    sql_storeWaifu = "INSERT INTO userWaifu (userid, imageURL, name, favourites) VALUES (?, ?, ?, ?)"
     sql_vals = (userid, waifu.female, waifu.name, waifu.age )
     con = sqlite3.connect('waifuUser.db')
     con.execute(sql_storeWaifu, sql_vals)

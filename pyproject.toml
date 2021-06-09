@@ -8,6 +8,7 @@ authors = ["saggins <win32prog@gmail.com>"]
 python = "^3.7"
 requests = "^2.25.1"
 pydantic = "^1.8.2"
+discord = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 
