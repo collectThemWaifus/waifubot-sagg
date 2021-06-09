@@ -50,7 +50,7 @@ async def waifu(ctx):
 
     embed2 = discord.Embed(
         title = 'Claimed', 
-        description = 'Claimed',
+        description = f'Claimed by {user.name}',
         colour = discord.Colour.red()
     )
     embed2.set_image(url= waifulol[rand1].imageURL)
@@ -73,7 +73,7 @@ async def help(ctx):
     embed.set_thumbnail(url = 'https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg')
     await ctx.send(embed=embed)
 
-client.run(token)
+client.run('ODQyODMyODc4NTU0MzE2ODM3.YJ7DSQ.nusyeamQWc7mNXn471y0lDZQHS8')
 
 #TODO: Create a caste system for waifu / husbandos
 # Use ANILIST for caste
