@@ -1,7 +1,5 @@
 import discord
-import random
-import os
-import requests
+import sys
 from discord.ext import commands
 from discord.ext.commands import has_permissions
 from discord import Member
@@ -9,9 +7,9 @@ from discord.ext.commands import Bot
 from discord import Status
 
 try:
-    token = os.environ.get['DISCORDTOKEN']
+    token = sys.argv[1]
 except:
-    print("ERROR: Did not add evironment variable \n try doing DISCORDTOKEN=addtokenhere")
+    print("ERROR: Did not add evironment variable \n try doing python bot.py entertokenhere")
     quit()
 
 intents = discord.Intents.all()
@@ -79,7 +77,7 @@ async def help(ctx):
     embed.set_thumbnail(url = 'https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg')
     await ctx.send(embed=embed)
 
-client.run('ODQyODMyODc4NTU0MzE2ODM3.YJ7DSQ.xMx2ddZCWmKg6aihGeb2esDGKYQ')
+client.run(token)
 
 #TODO: Create a caste system for waifu / husbandos
 # Use ANILIST for caste
