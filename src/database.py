@@ -19,8 +19,8 @@ def databaseSetup():
 
 def storeWaifu(waifu : Waifu, userid : str):
     databaseSetup()
-    sql_storeWaifu = "INSERT INTO userWaifu (userid, imageURL, name, favourites) VALUES (?, ?, ?, ?)"
-    sql_vals = (userid, waifu.female, waifu.name, waifu.age )
+    sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (?, ?, ?, ?)"
+    sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites )
     con = sqlite3.connect('waifuUser.db')
     con.execute(sql_storeWaifu, sql_vals)
     con.commit()
@@ -33,8 +33,12 @@ def getWaifu(userid: str):
     if ( result is None):
         return False
     return result
-waifu = Waifu(female = True, name = "Sagiri", age = 14)
+
+    
+waifu = Waifu(imageURL = "fdsfsdfsdfs", name = "Sagiri",favourites = 6969)
 user = "testUserId"
 storeWaifu(waifu=waifu, userid=user)
+
+
 result = getWaifu(user)
 print (result)
