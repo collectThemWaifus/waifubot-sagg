@@ -8,6 +8,12 @@ from discord import Member
 from discord.ext.commands import Bot
 from discord import Status
 
+try:
+    token = os.environ.get['DISCORDTOKEN']
+except:
+    print("ERROR: Did not add evironment variable \n try doing DISCORDTOKEN=addtokenhere")
+    quit()
+
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '.', intents=intents)
 client.remove_command('help')
