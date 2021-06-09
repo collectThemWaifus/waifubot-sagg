@@ -8,11 +8,7 @@ from discord import Member
 from discord.ext.commands import Bot
 from discord import Status
 
-try:
-    token = os.environ.get['DISCORDTOKEN']
-except:
-    print("ERROR: Did not add evironment variable \n try doing DISCORDTOKEN=addtokenhere")
-    quit()
+from collection import findWaifu
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)
@@ -37,16 +33,16 @@ async def on_message(message):
 
 @client.command(aliases = ['wa'])
 async def waifu(ctx):
+    waifulol = findWaifu(30)
+    rand1 = random.randint(0, 30)
     print("what")
     embed = discord.Embed(
-        title = 'Sample Waifu name',
+        title = 'Unclaimed',
         description = 'Unclaimed',
         colour = discord.Colour.blue()
     )
-    embed.set_image(url='https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/053b52c1-e89f-469b-aacb-972f74758f24/ddluws0-67fa36cc-0007-4e27-8bdf-46aefed76605.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzA1M2I1MmMxLWU4OWYtNDY5Yi1hYWNiLTk3MmY3NDc1OGYyNFwvZGRsdXdzMC02N2ZhMzZjYy0wMDA3LTRlMjctOGJkZi00NmFlZmVkNzY2MDUuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.pzbBFaABSy5xE-2yDGXwGZiibBLr4jcK_oh_dJ6Z-sk ')
-    embed.add_field(name = 'Name', value = 'name', inline = False)
-    embed.add_field(name = 'Age', value = 'age', inline = False)
-    embed.add_field(name = 'Gender', value = 'female', inline = False)
+    embed.set_image(url= waifulol[rand1].imageURL)
+    embed.add_field(name = 'Name', value = f'{waifulol[rand1].name}', inline = False)
     msg = await ctx.send(embed=embed)
     await msg.add_reaction('👍')
     await ctx.send("React with 👍 to claim!")
@@ -57,10 +53,8 @@ async def waifu(ctx):
         description = 'Claimed',
         colour = discord.Colour.red()
     )
-    embed2.set_image(url='https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/053b52c1-e89f-469b-aacb-972f74758f24/ddluws0-67fa36cc-0007-4e27-8bdf-46aefed76605.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzA1M2I1MmMxLWU4OWYtNDY5Yi1hYWNiLTk3MmY3NDc1OGYyNFwvZGRsdXdzMC02N2ZhMzZjYy0wMDA3LTRlMjctOGJkZi00NmFlZmVkNzY2MDUuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.pzbBFaABSy5xE-2yDGXwGZiibBLr4jcK_oh_dJ6Z-sk ')
-    embed2.add_field(name = 'Name', value = 'name', inline = False)
-    embed2.add_field(name = 'Age', value = 'age', inline = False)
-    embed2.add_field(name = 'Gender', value = 'female', inline = False)
+    embed2.set_image(url= waifulol[rand1].imageURL)
+    embed2.add_field(name = 'Name', value = f'{waifulol[rand1].name}', inline = False)
 
     await ctx.send(f"Claimed by {user.name}")
     await msg.edit(embed=embed2)
@@ -79,7 +73,7 @@ async def help(ctx):
     embed.set_thumbnail(url = 'https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg')
     await ctx.send(embed=embed)
 
-client.run('ODQyODMyODc4NTU0MzE2ODM3.YJ7DSQ.xMx2ddZCWmKg6aihGeb2esDGKYQ')
+client.run(token)
 
 #TODO: Create a caste system for waifu / husbandos
 # Use ANILIST for caste
