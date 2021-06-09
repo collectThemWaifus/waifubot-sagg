@@ -1,8 +1,8 @@
 import requests
-import json
+from basemodels import Waifu
 
-def findWaifu(perpage):
-  # Here we define our query as a multi-line string
+def findWaifu(ammount : int):
+
   query = '''
   query ($perpage: Int) { # Define which variables will be used in the query (id) 
     Page(page: 50, perPage: $perpage) { 
@@ -20,17 +20,21 @@ def findWaifu(perpage):
     } 
 
   '''
-
-  # Define our query variables and values that will be used in the query request
-  variables = {
-      'perpage': perpage
-}
+  variables = { 'perpage': ammount }
 
   url = 'https://graphql.anilist.co'
 
   # Make the HTTP Api request
-  response = requests.post(url, json={'query': query, 'variables': variables})
-  return(response.text)
+  parsedJson = requests.post(url, json={'query': query, 'variables': variables}).json()
 
-x = json.loads(findWaifu(30))
-print(x)
+  #Create and return list of waifus
+  listOfWaifu = []
+  for character in parsedJson["data"]["Page"]['characters']:
+    newWaifu = Waifu(imageURL=character["image"]["medium"], name=character["name"]["full"], favourites=character["favourites"])
+    listOfWaifu.append(newWaifu)
+  return listOfWaifu
+
+
+for waifu in findWaifu(30):
+  print (waifu)
+
