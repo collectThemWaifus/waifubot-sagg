@@ -7,6 +7,7 @@ from discord import Member
 from discord.ext.commands import Bot
 from discord import Status
 from collection import findWaifu
+from database import storeWaifu
 
 try:
     token = sys.argv[1]
@@ -24,6 +25,12 @@ async def on_ready():
     await client.change_presence(status=discord.Status.online, activity=discord.Game("Use -help for a list of commands"))
 
 @client.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        msg = '**Command on Cooldown**, please try again in {:.2f}s'.format(error.retry_after)
+        await ctx.send(msg)
+
+@client.event
 async def on_message(message):
     if message.author == client.user:
         return
@@ -36,9 +43,11 @@ async def on_message(message):
 
 
 @client.command(aliases = ['wa'])
+@commands.cooldown(1, 5, commands.BucketType.guild)
 async def waifu(ctx):
+    valid_reactions = ['👍']
     waifulol = findWaifu(30)
-    rand1 = random.randint(0, 30)
+    rand1 = random.randint(0, 29)
     print("what")
     embed = discord.Embed(
         title = 'Unclaimed',
@@ -48,26 +57,24 @@ async def waifu(ctx):
     embed.set_image(url= waifulol[rand1].imageURL)
     embed.add_field(name = 'Name', value = f'{waifulol[rand1].name}', inline = False)
     msg = await ctx.send(embed=embed)
+    await ctx.send("React with 👍 within **4** seconds to claim!")
     await msg.add_reaction('👍')
-    await ctx.send("React with 👍 to claim!")
-    reaction, user = await client.wait_for("reaction_add", check=lambda reaction, user: reaction.emoji == '👍')
+    def check(reaction, user):
+        return user == ctx.author and str(reaction.emoji) in valid_reactions
+    reaction, user = await client.wait_for("reaction_add",timeout=4.0, check=check)
 
-    embed2 = discord.Embed(
-        title = 'Claimed', 
-        description = f'Claimed by {user.name}',
-        colour = discord.Colour.red()
-    )
-    embed2.set_image(url= waifulol[rand1].imageURL)
-    embed2.add_field(name = 'Name', value = f'{waifulol[rand1].name}', inline = False)
+    if str(reaction.emoji) == '👍':
+        embed2 = discord.Embed(
+            title = 'Claimed', 
+            description = f'Claimed by {user.name}',
+            colour = discord.Colour.red()
+        )
+        embed2.set_image(url= waifulol[rand1].imageURL)
+        embed2.add_field(name = 'Name', value = f'{waifulol[rand1].name}', inline = False)
+        await msg.edit(embed=embed2)  
+        storeWaifu(waifulol[rand1], user.id)
 
-    await ctx.send(f"Claimed by {user.name}")
-    await msg.edit(embed=embed2)
-
-
-
-    #stores the user.name and the name of waifu and the image here
-
-@client.command(aliases = ['helpme'])
+@client.command(aliases = ['h'])
 async def help(ctx):
     embed = discord.Embed(
         title = 'Help menu for Waifu Bot', 
@@ -76,6 +83,16 @@ async def help(ctx):
     )
     embed.set_thumbnail(url = 'https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg')
     await ctx.send(embed=embed)
+
+@client.command(aliases = ['inv'])
+@commands.cooldown(1, 2, commands.BucketType.user)
+async def inventory(ctx):
+    embed = discord.Embed(
+        title = 'Click this link to view your inventory',
+        description = 'link',
+        colour = discord.Color.blurple()
+    )
+    await ctx.message.author.send(embed=embed)
 
 client.run(token)
 
