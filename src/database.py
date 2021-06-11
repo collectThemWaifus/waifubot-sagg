@@ -37,12 +37,3 @@ def getWaifu(userid: str):
     if ( result is None):
         return False
     return listOfWaifu
-
-    
-waifu = Waifu(imageURL = "fdsfsdfsdfs", name = "Sagiri",favourites = 6969)
-user = "testUserId"
-storeWaifu(waifu=waifu, userid=user)
-
-
-result = getWaifu(user)
-print (result)
