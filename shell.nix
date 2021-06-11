@@ -10,6 +10,7 @@ let
 in pkgs.mkShell {
   buildInputs = [
     python-env
+    pkgs.python37Packages.pip
     pkgs.poetry
     pkgs.sqlite
   ];
