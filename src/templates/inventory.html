@@ -1,0 +1,7 @@
+<ul>
+    {% for waifu in listOfWaifu %}
+        <li><b>Name:</b> {{ waifu.name }}</li>
+        <li><b>favourites:</b> {{ waifu.favourites }}</li>
+        <li><img src="{{ waifu.imageURL }}" alt=""></li>
+    {% endfor %}
+</ul>
