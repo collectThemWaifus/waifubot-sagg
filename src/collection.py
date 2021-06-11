@@ -1,7 +1,8 @@
+from typing import List
 import requests
 from basemodels import Waifu
 
-def findWaifu(ammount : int):
+def findWaifu(ammount : int) -> List[Waifu]:
 
   query = '''
   query ($perpage: Int) { # Define which variables will be used in the query (id) 
@@ -33,8 +34,3 @@ def findWaifu(ammount : int):
     newWaifu = Waifu(imageURL=character["image"]["medium"], name=character["name"]["full"], favourites=character["favourites"])
     listOfWaifu.append(newWaifu)
   return listOfWaifu
-
-
-for waifu in findWaifu(30):
-  print (waifu)
-
