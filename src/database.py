@@ -26,13 +26,17 @@ def storeWaifu(waifu : Waifu, userid : str):
     con.commit()
 
 def getWaifu(userid: str):
-    sql_storeWaifu = "SELECT name FROM userWaifu WHERE userid = ?"
+    sql_storeWaifu = "SELECT name, imageURL, favourites FROM userWaifu WHERE userid = ?"
     con = sqlite3.connect('waifuUser.db')
     cursor = con.execute(sql_storeWaifu, (userid,))
-    result = cursor.fetchone()
+    result = cursor.fetchall()
+    listOfWaifu = []
+    for value in result:
+        newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
+        listOfWaifu.append(newWaifu)
     if ( result is None):
         return False
-    return result
+    return listOfWaifu
 
     
 waifu = Waifu(imageURL = "fdsfsdfsdfs", name = "Sagiri",favourites = 6969)
