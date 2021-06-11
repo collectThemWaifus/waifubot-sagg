@@ -5,7 +5,7 @@ let
   unstable = import <nixos-unstable> {config = {allowUnfree=true;};};
   inherit (pkgs.lib) optional optionals;
   # Python
-  python-env = pkgs.poetry2nix.mkPoetryEnv {
+  python-env = unstable.poetry2nix.mkPoetryEnv {
     projectDir = ./.;
   };
 in pkgs.mkShell {
