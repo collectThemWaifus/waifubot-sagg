@@ -2,10 +2,6 @@ import discord
 import random
 import sys
 from discord.ext import commands
-from discord.ext.commands import has_permissions
-from discord import Member
-from discord.ext.commands import Bot
-from discord import Status
 from collection import findWaifu
 from database import storeWaifu
 
@@ -40,39 +36,46 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-
-
-@client.command(aliases = ['wa'])
-@commands.cooldown(1, 5, commands.BucketType.guild)
-async def waifu(ctx):
-    valid_reactions = ['👍']
-    waifulol = findWaifu(30)
-    rand1 = random.randint(0, 29)
-    print("what")
-    embed = discord.Embed(
-        title = 'Unclaimed',
-        description = 'Unclaimed',
-        colour = discord.Colour.blue()
-    )
-    embed.set_image(url= waifulol[rand1].imageURL)
-    embed.add_field(name = 'Name', value = f'{waifulol[rand1].name}', inline = False)
-    msg = await ctx.send(embed=embed)
-    await ctx.send("React with 👍 within **4** seconds to claim!")
-    await msg.add_reaction('👍')
-    def check(reaction, user):
-        return user == ctx.author and str(reaction.emoji) in valid_reactions
-    reaction, user = await client.wait_for("reaction_add",timeout=4.0, check=check)
-
+#key is MessageID, and Value is Waifu
+unclaimedWaifus = {}
+@client.event
+async def on_reaction_add(reaction, user):
+    if (user.bot): 
+        return
+    global unclaimedWaifus
+    try: #check if waifu exsits
+        messageWaifu = unclaimedWaifus.get(str(reaction.message.id))
+    except:
+        return
     if str(reaction.emoji) == '👍':
         embed2 = discord.Embed(
             title = 'Claimed', 
             description = f'Claimed by {user.name}',
             colour = discord.Colour.red()
         )
-        embed2.set_image(url= waifulol[rand1].imageURL)
-        embed2.add_field(name = 'Name', value = f'{waifulol[rand1].name}', inline = False)
-        await msg.edit(embed=embed2)  
-        storeWaifu(waifulol[rand1], user.id)
+        embed2.set_image(url= messageWaifu.imageURL)
+        embed2.add_field(name = 'Name', value = f'{messageWaifu.name}', inline = False)
+        await reaction.message.edit(embed=embed2)  
+        storeWaifu(messageWaifu, user.id)
+@client.command(aliases = ['wa'])
+async def waifu(ctx : commands.Context):
+    valid_reactions = ['👍']
+    listOfRandomWaifu = findWaifu(30)
+    randomNum = random.randint(0, 29)
+    randomWaifu = listOfRandomWaifu[randomNum]
+    print("what")
+    embed = discord.Embed(
+        title = 'Unclaimed',
+        description = 'Unclaimed',
+        colour = discord.Colour.blue()
+    )
+    embed.set_image(url= randomWaifu.imageURL)
+    embed.add_field(name = 'Name', value = f'{randomWaifu.name}', inline = False)
+    msg = await ctx.send(embed=embed)
+    unclaimedWaifus[str(msg.id)] =randomWaifu
+
+    #await ctx.send("React with 👍 within **4** seconds to claim!")
+    await msg.add_reaction('👍')
 
 @client.command(aliases = ['h'])
 async def help(ctx):
