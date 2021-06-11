@@ -9,6 +9,7 @@ python = "^3.7"
 requests = "^2.25.1"
 pydantic = "^1.8.2"
 discord = "^1.0.1"
+flask = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 
