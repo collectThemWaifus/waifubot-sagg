@@ -11,6 +11,7 @@ pydantic = "^1.8.2"
 discord = "^1.0.1"
 flask = "^2.0.1"
 colorama = "^0.4.4"
+Flask-Discord = "^0.1.64"
 
 [tool.poetry.dev-dependencies]
 
