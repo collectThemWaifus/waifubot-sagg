@@ -1,0 +1,7 @@
+<ul>
+    {% for player in listPlayers %}
+        <li><b>Name:</b> {{ player.name }}</li>
+        <li><b>Total Favourites:</b> {{ player.totalValue }}</li>
+        <li><img src="{{ player.avatarURL }}" alt=""></li>
+    {% endfor %}
+</ul>

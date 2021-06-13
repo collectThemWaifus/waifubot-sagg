@@ -1,6 +1,8 @@
 from os import statvfs_result
 import sqlite3
-from basemodels import Waifu
+
+from flask_discord.client import DiscordOAuth2Session
+from basemodels import Waifu, User
 def databaseSetup():
     sql_waifuUserTable = '''
         CREATE TABLE IF NOT EXISTS userWaifu (
@@ -18,7 +20,6 @@ def databaseSetup():
     print("Tables Ready!")
 
 def storeWaifu(waifu : Waifu, userid : str):
-    databaseSetup()
     sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (?, ?, ?, ?)"
     sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites )
     con = sqlite3.connect('waifuUser.db')
@@ -37,3 +38,19 @@ def getWaifu(userid: str):
     if ( result is None):
         return False
     return listOfWaifu
+
+def getAllUsers(bot_request: DiscordOAuth2Session.bot_request):
+    sql_getUsers =  "SELECT DISTINCT userid, SUM(favourites) FROM userWaifu ORDER BY SUM(favourites) DESC"
+    con = sqlite3.connect('waifuUser.db')
+    cursor = con.execute(sql_getUsers)
+    result = cursor.fetchall()
+    listOfUsers = []
+    for value in result:
+        userId = value[0]
+        userObject = bot_request(f"/users/{userId}")
+        avatarHash = userObject["avatar"]
+        newUser = User(userId=userId, totalValue=value[1], name=userObject["username"], avatarURL=(f"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.png"))
+        listOfUsers.append(newUser)
+    if ( result is None):
+        return False
+    return listOfUsers
