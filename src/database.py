@@ -1,5 +1,6 @@
 from os import statvfs_result
 import sqlite3
+from typing import List
 
 from flask_discord.client import DiscordOAuth2Session
 from basemodels import Waifu, User
@@ -18,7 +19,6 @@ def databaseSetup():
     con.execute(sql_waifuUserTable)
     con.commit()
     print("Tables Ready!")
-
 def storeWaifu(waifu : Waifu, userid : str):
     sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (?, ?, ?, ?)"
     sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites )
@@ -26,7 +26,7 @@ def storeWaifu(waifu : Waifu, userid : str):
     con.execute(sql_storeWaifu, sql_vals)
     con.commit()
 
-def getWaifu(userid: str):
+def getWaifu(userid: str) -> List[Waifu]:
     sql_storeWaifu = "SELECT name, imageURL, favourites FROM userWaifu WHERE userid = ?"
     con = sqlite3.connect('waifuUser.db')
     cursor = con.execute(sql_storeWaifu, (userid,))
@@ -39,7 +39,14 @@ def getWaifu(userid: str):
         return False
     return listOfWaifu
 
-def getAllUsers(bot_request: DiscordOAuth2Session.bot_request):
+def checkWaifuDuplicate(name : str) -> bool:
+    sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = ?"
+    con = sqlite3.connect('waifuUser.db')
+    result = con.execute(sql_checkWaifuDuplicate, (name,)).fetchone()
+    if (result is None):
+        return False
+    return True
+def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
     sql_getUsers =  "SELECT DISTINCT userid, SUM(favourites) FROM userWaifu GROUP BY userid ORDER BY SUM(favourites) DESC"
     con = sqlite3.connect('waifuUser.db')
     cursor = con.execute(sql_getUsers)
