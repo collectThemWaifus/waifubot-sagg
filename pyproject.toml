@@ -12,6 +12,7 @@ discord = "^1.0.1"
 flask = "^2.0.1"
 colorama = "^0.4.4"
 Flask-Discord = "^0.1.64"
+pytest = "^6.2.4"
 
 [tool.poetry.dev-dependencies]
 
