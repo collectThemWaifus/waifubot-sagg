@@ -7,7 +7,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"      # !! Only in development environment.
 
-app.config["DISCORD_CLIENT_ID"] = 526954549638856735    # Discord client ID.
+app.config["DISCORD_CLIENT_ID"] =  os.getenv("DISCORD_CLIENT_ID")    # Discord client ID.
 app.config["DISCORD_CLIENT_SECRET"] = os.getenv("DISCORD_CLIENT_SECRET")           # Discord client secret.
 app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")   
 app.config["DISCORD_REDIRECT_URI"] = "http://127.0.0.1:5000/callback"
