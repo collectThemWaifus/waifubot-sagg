@@ -40,7 +40,7 @@ def getWaifu(userid: str):
     return listOfWaifu
 
 def getAllUsers(bot_request: DiscordOAuth2Session.bot_request):
-    sql_getUsers =  "SELECT DISTINCT userid, SUM(favourites) FROM userWaifu ORDER BY SUM(favourites) DESC"
+    sql_getUsers =  "SELECT DISTINCT userid, SUM(favourites) FROM userWaifu GROUP BY userid ORDER BY SUM(favourites) DESC"
     con = sqlite3.connect('waifuUser.db')
     cursor = con.execute(sql_getUsers)
     result = cursor.fetchall()
