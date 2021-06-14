@@ -22,7 +22,7 @@ def databaseSetup():
     print("Tables Ready!")
 def storeWaifu(waifu : Waifu, userid : str):
     sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (?, ?, ?, ?)"
-    sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites, 0 )
+    sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites)
     con = sqlite3.connect('waifuUser.db')
     con.execute(sql_storeWaifu, sql_vals)
     con.commit()
