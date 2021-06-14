@@ -7,7 +7,7 @@
 
 <nav class="navbar  navbar-expand-lg navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="#">WaifuBot</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -33,13 +33,11 @@
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            Dropdown
+            Directory
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider" /></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="#">Player</a></li>
+            <li><a class="dropdown-item" href="#">Waifu</a></li>
           </ul>
         </li>
       </ul>
@@ -50,7 +48,16 @@
           placeholder="Who Has Your Waifu?"
           aria-label="Search"
         />
-        <button class="btn btn-outline-success" type="submit">Find</button>
+        <button class="btn btn-outline-success me-2" type="submit">Find</button>
+      </form>
+      <form class="d-flex">
+        <input
+          class="form-control me-2"
+          type="search"
+          placeholder="LookUp Player"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success me-2" type="submit">Find</button>
       </form>
       <div class="nav-item dropdown">
       {% if authorized %}
@@ -72,7 +79,7 @@
           {{ user.name }}
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item" href="#">Action</a></li>
+          <li><a class="dropdown-item" href="#">Wishlist</a></li>
           <li><a class="dropdown-item" href="#">Another action</a></li>
           <li><hr class="dropdown-divider" /></li>
           <li><a class="dropdown-item" href="#">Something else here</a></li>
