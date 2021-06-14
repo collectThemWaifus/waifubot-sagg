@@ -62,3 +62,18 @@ def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
     if ( result is None):
         return False
     return listOfUsers
+
+def getValuedWaifu(desc : bool, limit: int) -> List[Waifu]:
+    sql_getMostValuedWaifu = "SELECT name, imageURL, favourites FROM userWaifu ORDER BY favourites ? LIMIT ?"
+    con = sqlite3.connect('waifuUser.db')
+    if (desc):
+        sql_vals = ('DESC', limit,)
+    else:
+        sql_vals = ('ASC', limit,)
+    cursor = con.execute(sql_getMostValuedWaifu, sql_vals)
+    result = cursor.fetchall()
+    listOfWaifu = []
+    for value in result:
+        newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
+        listOfWaifu.append(newWaifu)
+    return listOfWaifu
