@@ -5,9 +5,9 @@ import os
 
 try:
     os.system('waifuUser.db')
-    databaseSetup()
 except:
-    databaseSetup()
+    pass
+databaseSetup()
 
 
 def createTestUser(totalValue : int):
