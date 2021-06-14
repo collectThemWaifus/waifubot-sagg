@@ -13,6 +13,10 @@ def createTestUser(totalValue : int):
 
 def test_checkWaifuDuplicate():
     databaseSetup()
-    testWaifu = findWaifu(1)[0]
+    testWaifuList = findWaifu(2)
+    testWaifu = testWaifuList[0]
     storeWaifu(testWaifu, 185918091685920768)
     assert checkWaifuDuplicate(testWaifu.name)
+    
+    newTestWaifu = testWaifuList[1]
+    assert not checkWaifuDuplicate(newTestWaifu.name)
