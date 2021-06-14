@@ -1,6 +1,17 @@
 from basemodels import User, Waifu
 from collection import findWaifu
-from database import checkWaifuDuplicate, databaseSetup, storeWaifu
+from database import checkWaifuDuplicate, databaseSetup, getWaifu, storeWaifu
+import os
+import pytest
+
+@pytest.fixture(autouse=True)
+def resetDB():
+    try:
+        os.system('rm waifuUser.db')
+    except:
+        pass
+    databaseSetup()
+
 
 def createTestUser(totalValue : int):
     testUser = User(
@@ -12,7 +23,16 @@ def createTestUser(totalValue : int):
     return testUser
 
 def test_checkWaifuDuplicate():
-    databaseSetup()
-    testWaifu = findWaifu(1)[0]
+    testWaifuList = findWaifu(2)
+    testWaifu = testWaifuList[0]
     storeWaifu(testWaifu, 185918091685920768)
     assert checkWaifuDuplicate(testWaifu.name)
+    
+    newTestWaifu = testWaifuList[1]
+    assert not checkWaifuDuplicate(newTestWaifu.name)
+
+def test_StoreGetWaifu():
+    testWaifu = findWaifu(1)[0]
+    storeWaifu(testWaifu, 185918091685920768)
+    assert testWaifu == getWaifu(185918091685920768)[0]
+    assert not getWaifu(12345677889)

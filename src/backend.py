@@ -16,12 +16,11 @@ app.config["DISCORD_REDIRECT_URI"] = "http://127.0.0.1:5000/callback"
 discord = DiscordOAuth2Session(app) 
 databaseSetup()
 print(Fore.GREEN + "PROCESS:\t" + Fore.MAGENTA + "SQL tables ready!")
-
-@app.route('/leaderboard')
-def listAllUsers() :
+@app.route("/")
+def home():
     listOfAllPlayerInventory = getAllUsers(discord.bot_request)
 
-    return render_template("leaderboard.html", listPlayers=listOfAllPlayerInventory)
+    return render_template("index.html",user=discord.fetch_user(), authorized=discord.authorized , listPlayers=listOfAllPlayerInventory )
 
 @app.route('/inventory/<userID>')
 def hello_world(userID=None):
@@ -29,19 +28,18 @@ def hello_world(userID=None):
     if(not listOfPlayerWaifu ):
         return "no inventory :C"
     
-    return render_template("inventory.html", listOfWaifu=listOfPlayerWaifu)
+    return render_template("inventory.html",listOfWaifu=listOfPlayerWaifu)
 
 
 
 @app.route("/login/")
 def login():
     return discord.create_session()
-	
 
 @app.route("/callback/")
 def callback():
     discord.callback()
-    return redirect(url_for(".me"))
+    return redirect(url_for(".home"))
 
 
 @app.errorhandler(Unauthorized)

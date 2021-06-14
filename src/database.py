@@ -12,6 +12,7 @@ def databaseSetup():
             imageURL VARCHAR(100) NOT NULL,
             favourites MEDIUMINT NOT NULL,
             time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            sacrificed INT DEFAULT 0,
             PRIMARY KEY (userid, time)
         );
     '''
@@ -21,7 +22,7 @@ def databaseSetup():
     print("Tables Ready!")
 def storeWaifu(waifu : Waifu, userid : str):
     sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (?, ?, ?, ?)"
-    sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites )
+    sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites)
     con = sqlite3.connect('waifuUser.db')
     con.execute(sql_storeWaifu, sql_vals)
     con.commit()
