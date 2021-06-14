@@ -1,6 +1,6 @@
 from basemodels import User, Waifu
 from collection import findWaifu
-from database import checkWaifuDuplicate, databaseSetup, storeWaifu
+from database import checkWaifuDuplicate, databaseSetup, getWaifu, storeWaifu
 import os
 import pytest
 
@@ -33,5 +33,6 @@ def test_checkWaifuDuplicate():
 
 def test_StoreGetWaifu():
     testWaifu = findWaifu(1)[0]
-    storeWaifu(testWaifu)
-
+    storeWaifu(testWaifu, 185918091685920768)
+    assert testWaifu == getWaifu(185918091685920768)[0]
+    assert not getWaifu(12345677889)
