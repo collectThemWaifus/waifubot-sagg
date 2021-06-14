@@ -4,7 +4,7 @@ from database import checkWaifuDuplicate, databaseSetup, storeWaifu
 import os
 
 try:
-    os.system('waifuUser.db')
+    os.system('rm waifuUser.db')
 except:
     pass
 databaseSetup()
