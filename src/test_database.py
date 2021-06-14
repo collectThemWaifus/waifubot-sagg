@@ -1,6 +1,14 @@
 from basemodels import User, Waifu
 from collection import findWaifu
 from database import checkWaifuDuplicate, databaseSetup, storeWaifu
+import os
+
+try:
+    os.system('waifuUser.db')
+    databaseSetup()
+except:
+    databaseSetup()
+
 
 def createTestUser(totalValue : int):
     testUser = User(
@@ -12,7 +20,6 @@ def createTestUser(totalValue : int):
     return testUser
 
 def test_checkWaifuDuplicate():
-    databaseSetup()
     testWaifuList = findWaifu(2)
     testWaifu = testWaifuList[0]
     storeWaifu(testWaifu, 185918091685920768)
