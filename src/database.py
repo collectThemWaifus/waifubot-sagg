@@ -3,6 +3,7 @@ import sqlite3
 from typing import List
 
 from flask_discord.client import DiscordOAuth2Session
+from flask_discord.models import user
 from basemodels import Waifu, User
 def databaseSetup():
     sql_waifuUserTable = '''
@@ -55,22 +56,28 @@ def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
     listOfUsers = []
     for value in result:
         userId = value[0]
-        userObject = bot_request(f"/users/{userId}")
-        avatarHash = userObject["avatar"]
-        newUser = User(userId=userId, totalValue=value[1], name=userObject["username"], avatarURL=(f"https://cdn.discordapp.com/avatars/{userId}/{avatarHash}.png"))
+        newUser = getUserFromId(userId)
         listOfUsers.append(newUser)
     if ( result is None):
         return False
     return listOfUsers
 
+def getUserFromId(userid: int, bot_request : DiscordOAuth2Session.bot_request) -> User:
+    sql_getUsers =  "SELECT SUM(favourites) FROM userWaifu WHERE userid=? ORDER BY SUM(favourites) DESC"
+    con = sqlite3.connect('waifuUser.db')
+    cursor = con.execute(sql_getUsers, (userid,))
+    result = cursor.fetchone()
+    userObject = bot_request(f"/users/{userid}")
+    avatarHash = userObject["avatar"]
+    return User(userId=userid, totalValue=result[0], name=userObject["username"], avatarURL=(f"https://cdn.discordapp.com/avatars/{userid}/{avatarHash}.png"))
+
 def getValuedWaifu(desc : bool, limit: int) -> List[Waifu]:
-    sql_getMostValuedWaifu = "SELECT name, imageURL, favourites FROM userWaifu ORDER BY favourites ? LIMIT ?"
     con = sqlite3.connect('waifuUser.db')
     if (desc):
-        sql_vals = ('DESC', limit,)
+        sql_getMostValuedWaifu = "SELECT name, imageURL, favourites, userid FROM userWaifu ORDER BY favourites DESC LIMIT ?"
     else:
-        sql_vals = ('ASC', limit,)
-    cursor = con.execute(sql_getMostValuedWaifu, sql_vals)
+        sql_getMostValuedWaifu = "SELECT name, imageURL, favourites, userid FROM userWaifu ORDER BY favourites ASC LIMIT ?"
+    cursor = con.execute(sql_getMostValuedWaifu, (limit,))
     result = cursor.fetchall()
     listOfWaifu = []
     for value in result:
