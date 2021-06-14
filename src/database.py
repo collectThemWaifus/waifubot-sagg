@@ -12,7 +12,7 @@ def databaseSetup():
             imageURL VARCHAR(100) NOT NULL,
             favourites MEDIUMINT NOT NULL,
             time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            sacrificed INT NOT NULL
+            sacrificed INT NOT NULL,
             PRIMARY KEY (userid, time)
         );
     '''
