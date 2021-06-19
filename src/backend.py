@@ -1,4 +1,4 @@
-from database import databaseSetup, getAllUsers, getWaifu
+from database import databaseSetup, getAllUsers, getValuedWaifu, getWaifu
 from flask import Flask, render_template, redirect, url_for
 from colorama import Fore
 from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
@@ -19,8 +19,12 @@ print(Fore.GREEN + "PROCESS:\t" + Fore.MAGENTA + "SQL tables ready!")
 @app.route("/")
 def home():
     listOfAllPlayerInventory = getAllUsers(discord.bot_request)
-
-    return render_template("index.html",user=discord.fetch_user(), authorized=discord.authorized , listPlayers=listOfAllPlayerInventory )
+    listValuedWaifu = getValuedWaifu(True, 10, discord.bot_request)
+    return render_template("index.html",
+                        user=discord.fetch_user(),
+                        authorized=discord.authorized,
+                        listPlayers=listOfAllPlayerInventory,
+                        listWaiufs=listValuedWaifu)
 
 @app.route('/inventory/<userID>')
 def hello_world(userID=None):
