@@ -4,7 +4,7 @@ from typing import List
 
 from flask_discord.client import DiscordOAuth2Session
 from flask_discord.models import user
-from basemodels import Waifu, User
+from WaifuTrade.Data.basemodels import Waifu, User
 def databaseSetup():
     sql_waifuUserTable = '''
         CREATE TABLE IF NOT EXISTS userWaifu (

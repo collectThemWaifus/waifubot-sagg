@@ -3,8 +3,8 @@ import random
 import sys
 import time
 from discord.ext import commands
-from collection import findWaifu
-from database import storeWaifu
+from WaifuTrade.Data.collection import findWaifu
+from WaifuTrade.Data.database import storeWaifu
 import os 
 token = os.getenv("DISCORD_BOT_TOKEN")  
 if (token is None):

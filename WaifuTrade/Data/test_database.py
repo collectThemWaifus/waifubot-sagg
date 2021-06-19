@@ -1,6 +1,6 @@
-from basemodels import User, Waifu
-from collection import findWaifu
-from database import checkWaifuDuplicate, databaseSetup, getWaifu, storeWaifu
+from WaifuTrade.Data.basemodels import User, Waifu
+from WaifuTrade.Data.collection import findWaifu
+from WaifuTrade.Data.database import checkWaifuDuplicate, databaseSetup, getWaifu, storeWaifu
 import os
 import pytest
 
