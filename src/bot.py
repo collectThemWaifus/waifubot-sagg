@@ -5,12 +5,11 @@ import time
 from discord.ext import commands
 from collection import findWaifu
 from database import storeWaifu
+import os 
+token = os.getenv("DISCORD_BOT_TOKEN")  
+if (token is None):
+    token = open(f"/run/secrets/DISCORD_BOT_TOKEN").read()
 
-try:
-    token = sys.argv[1]
-except:
-    print("ERROR: Did not add evironment variable \n try doing python bot.py entertokenhere")
-    quit()
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)

@@ -4,13 +4,20 @@ from colorama import Fore
 from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
 import os
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY")
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"      # !! Only in development environment.
 
-app.config["DISCORD_CLIENT_ID"] =  os.getenv("DISCORD_CLIENT_ID")    # Discord client ID.
-app.config["DISCORD_CLIENT_SECRET"] = os.getenv("DISCORD_CLIENT_SECRET")           # Discord client secret.
-app.config["DISCORD_BOT_TOKEN"] = os.getenv("DISCORD_BOT_TOKEN")   
-app.config["DISCORD_REDIRECT_URI"] = "http://127.0.0.1:5000/callback"
+envList = ["DISCORD_CLIENT_SECRET", "DISCORD_BOT_TOKEN", "DISCORD_REDIRECT_URI"]
+
+for env in envList:
+    if (os.getenv(env) is None): # Use Discord Secrets as backup (this is not elgant, Too Bad!)
+        app.config[env] = open(f"/run/secrets/{env}").read()
+    else :
+        app.config[env] = os.getenv(env)
+
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
+if ( app.secret_key is None):
+    app.secret_key = open(f"/run/secrets/FLASK_SECRET_KEY").read()
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"      # !! Only in development environment.
 
 
 discord = DiscordOAuth2Session(app) 
