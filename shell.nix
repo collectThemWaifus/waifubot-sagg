@@ -14,6 +14,7 @@ in pkgs.mkShell {
     unstable.python37Packages.pip
     pkgs.poetry
     pkgs.sqlite
+    pkgs.docker
   ];
 
 }
