@@ -1,6 +1,6 @@
 from typing import List
 import requests
-from WaifuTrade.Data.basemodels import Waifu
+from basemodels import Waifu
 
 def findWaifu(ammount : int) -> List[Waifu]:
 

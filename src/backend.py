@@ -1,4 +1,4 @@
-from WaifuTrade.Data.database import databaseSetup, getAllUsers, getWaifu
+from database import databaseSetup, getAllUsers, getWaifu
 from flask import Flask, render_template, redirect, url_for
 from colorama import Fore
 from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
