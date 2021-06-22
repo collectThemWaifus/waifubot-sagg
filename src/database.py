@@ -56,7 +56,7 @@ def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
     listOfUsers = []
     for value in result:
         userId = value[0]
-        newUser = getUserFromId(userId)
+        newUser = getUserFromId(userId, bot_request)
         listOfUsers.append(newUser)
     if ( result is None):
         return False
@@ -71,7 +71,7 @@ def getUserFromId(userid: int, bot_request : DiscordOAuth2Session.bot_request) -
     avatarHash = userObject["avatar"]
     return User(userId=userid, totalValue=result[0], name=userObject["username"], avatarURL=(f"https://cdn.discordapp.com/avatars/{userid}/{avatarHash}.png"))
 
-def getValuedWaifu(desc : bool, limit: int) -> List[Waifu]:
+def getValuedWaifu(desc : bool, limit: int, bot_request : DiscordOAuth2Session.bot_request) -> List[Waifu]:
     con = sqlite3.connect('waifuUser.db')
     if (desc):
         sql_getMostValuedWaifu = "SELECT name, imageURL, favourites, userid FROM userWaifu ORDER BY favourites DESC LIMIT ?"
@@ -82,5 +82,6 @@ def getValuedWaifu(desc : bool, limit: int) -> List[Waifu]:
     listOfWaifu = []
     for value in result:
         newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
+        newWaifu.claimName = getUserFromId(value[3], bot_request).name
         listOfWaifu.append(newWaifu)
     return listOfWaifu
