@@ -1,0 +1,18 @@
+
+<div class="container">
+    <div class="row">
+        <h3>Largest Portfolio</h3>
+    </div>
+    <div class=" row justify-content-md-center">
+        {% for player in listPlayers %}
+        <div class="card" style="width: 9rem">
+            <img src="{{ player.avatarURL }}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">{{ player.name }}</h5>
+              <p class="card-text"> <b>Total Value</b> {{ player.totalValue }} </p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+</div>
