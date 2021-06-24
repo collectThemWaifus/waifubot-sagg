@@ -69,7 +69,7 @@ async def on_reaction_add(reaction, user):
 @client.command(aliases = ['wa'])
 async def waifu(ctx : commands.Context):
     valid_reactions = ['👍']
-    listOfRandomWaifu = findWaifu(30)
+    listOfRandomWaifu = findWaifu(30,1)
     randomNum = random.randint(0, 29)
     randomWaifu = listOfRandomWaifu[randomNum]
     embed = discord.Embed(
