@@ -1,10 +1,29 @@
 from os import statvfs_result
+import os
 import sqlite3
 from typing import List
 
 from flask_discord.client import DiscordOAuth2Session
 from flask_discord.models import user
+from sqlalchemy.engine import create_engine, result
 from basemodels import Waifu, User
+from sqlalchemy.engine import Engine
+
+def getEngine () -> Engine:
+
+    dbUser = os.getenv("DBUSER")
+    dbPass = os.getenv("DBPASS") 
+    dbHost = os.getenv("DBHOST") 
+    dbPort = os.getenv("DBPORT")
+    dbDatabase =  os.getenv("DBDATABASE")
+    if (dbUser is None or dbPass is None or dbHost is None): # is testing
+        return create_engine('sqlite:///waifuUser.db')
+    if (dbPort is None):
+        dbPort = '3306'
+    if (dbDatabase is None):
+        dbDatabase = 'sagginwaifubot'
+    return create_engine(f'mysql://{dbUser}:{dbPass}@{dbHost}:{dbPort}/{dbDatabase}')    
+
 def databaseSetup():
     sql_waifuUserTable = '''
         CREATE TABLE IF NOT EXISTS userWaifu (
@@ -17,22 +36,16 @@ def databaseSetup():
             PRIMARY KEY (userid, time)
         );
     '''
-    con = sqlite3.connect('waifuUser.db')
-    con.execute(sql_waifuUserTable)
-    con.commit()
+    getEngine().execute(sql_waifuUserTable)
     print("Tables Ready!")
 def storeWaifu(waifu : Waifu, userid : str):
     sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (?, ?, ?, ?)"
     sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites)
-    con = sqlite3.connect('waifuUser.db')
-    con.execute(sql_storeWaifu, sql_vals)
-    con.commit()
+    getEngine().execute(sql_storeWaifu, sql_vals)
 
 def getWaifu(userid: str) -> List[Waifu]:
     sql_storeWaifu = "SELECT name, imageURL, favourites FROM userWaifu WHERE userid = ?"
-    con = sqlite3.connect('waifuUser.db')
-    cursor = con.execute(sql_storeWaifu, (userid,))
-    result = cursor.fetchall()
+    result = getEngine().execute(sql_storeWaifu, (userid,))
     listOfWaifu = []
     for value in result:
         newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
@@ -43,16 +56,13 @@ def getWaifu(userid: str) -> List[Waifu]:
 
 def checkWaifuDuplicate(name : str) -> bool:
     sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = ?"
-    con = sqlite3.connect('waifuUser.db')
-    result = con.execute(sql_checkWaifuDuplicate, (name,)).fetchone()
+    result = getEngine().execute(sql_checkWaifuDuplicate, (name,)).fetchone()
     if (result is None):
         return False
     return True
 def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
     sql_getUsers =  "SELECT DISTINCT userid, SUM(favourites) FROM userWaifu GROUP BY userid ORDER BY SUM(favourites) DESC"
-    con = sqlite3.connect('waifuUser.db')
-    cursor = con.execute(sql_getUsers)
-    result = cursor.fetchall()
+    result = getEngine().execute(sql_getUsers)
     listOfUsers = []
     for value in result:
         userId = value[0]
@@ -64,21 +74,17 @@ def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
 
 def getUserFromId(userid: int, bot_request : DiscordOAuth2Session.bot_request) -> User:
     sql_getUsers =  "SELECT SUM(favourites) FROM userWaifu WHERE userid=? ORDER BY SUM(favourites) DESC"
-    con = sqlite3.connect('waifuUser.db')
-    cursor = con.execute(sql_getUsers, (userid,))
-    result = cursor.fetchone()
+    result = getEngine().execute(sql_getUsers, (userid,))
     userObject = bot_request(f"/users/{userid}")
     avatarHash = userObject["avatar"]
     return User(userId=userid, totalValue=result[0], name=userObject["username"], avatarURL=(f"https://cdn.discordapp.com/avatars/{userid}/{avatarHash}.png"))
 
 def getValuedWaifu(desc : bool, limit: int, bot_request : DiscordOAuth2Session.bot_request) -> List[Waifu]:
-    con = sqlite3.connect('waifuUser.db')
     if (desc):
         sql_getMostValuedWaifu = "SELECT name, imageURL, favourites, userid FROM userWaifu ORDER BY favourites DESC LIMIT ?"
     else:
         sql_getMostValuedWaifu = "SELECT name, imageURL, favourites, userid FROM userWaifu ORDER BY favourites ASC LIMIT ?"
-    cursor = con.execute(sql_getMostValuedWaifu, (limit,))
-    result = cursor.fetchall()
+    result = getEngine().execute(sql_getMostValuedWaifu, (limit,))
     listOfWaifu = []
     for value in result:
         newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
