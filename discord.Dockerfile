@@ -6,5 +6,5 @@ WORKDIR /app
 COPY . .
 RUN pip3 install --user poetry
 RUN ["python3", "-m", "poetry", "install"]
-CMD ["python3", "-m", "poetry", "run", "/app/src/bot.py"]
+CMD ["python3", "run", "/app/src/bot.py"]
  
