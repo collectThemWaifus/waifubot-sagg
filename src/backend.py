@@ -19,8 +19,6 @@ if ( app.secret_key is None):
 
 if (os.getenv("FLASK_ENV") == "development"):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"      # !! Only in development environment.
-else:
-    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "false"      
 
 
 discord = DiscordOAuth2Session(app) 
