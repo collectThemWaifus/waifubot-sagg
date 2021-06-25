@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, url_for
 from colorama import Fore
 from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
 import os
+from waitress import serve
 app = Flask(__name__)
 
 envList = ["DISCORD_CLIENT_SECRET", "DISCORD_BOT_TOKEN", "DISCORD_REDIRECT_URI", "DISCORD_CLIENT_ID"]
@@ -72,6 +73,6 @@ def me():
             <img src='{user.avatar_url}' />
         </body>
     </html>"""
-
+serve(app, listen='*:8080')
 #TODO: /getWaifu/USERID
 
