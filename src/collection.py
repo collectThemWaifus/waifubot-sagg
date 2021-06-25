@@ -37,7 +37,7 @@ def findWaifu(ammount : int,whichpage: int) -> List[Waifu]:
   return listOfWaifu
 
 def GetCasteWaifu(ranking): #page 67, threshold = 500 fav min
-  if ranking == 'SSS': #top 20 - 1% (SSS): 27.8k - 12.2k favourites
+  if ranking == 'SSS': #top 20 - 1% (SSS): 28016 - 12324 favourites
     waifulist = findWaifu(20,1)
     return(waifulist[random.randrange(20)])
 
@@ -70,15 +70,15 @@ def GetCasteWaifu(ranking): #page 67, threshold = 500 fav min
       waifulist = waifulist + findWaifu(20,x)
     return(waifulist[random.randrange(400)])
 
-  if ranking == "D": #820-1320th - 37% (D) 935 - 525 favourites
+  if ranking == "D": #820-1320th - 37% (D) 934 - 525 favourites
     waifulist = [] 
     for x in range(42,67):
       waifulist = waifulist + findWaifu(20,x)
-    return(random.randrange(500))
+    return(waifulist[random.randrange(500)])
 
     
 
-
+print(GetCasteWaifu("SSS"))
 
 
 
