@@ -7,6 +7,8 @@ from basemodels import Waifu, User
 from flask_discord.client import DiscordOAuth2Session
 from sqlalchemy.engine import create_engine, result
 
+from sqlalchemy.engine.url import URL
+
 def getEngine () -> Engine:
 
     dbUser = os.getenv("DBUSER")
@@ -20,8 +22,7 @@ def getEngine () -> Engine:
         dbPort = '3306'
     if (dbDatabase is None):
         dbDatabase = 'sagginwaifubot'
-    return create_engine(f'mysql://{dbUser}:{dbPass}@{dbHost}:{dbPort}/{dbDatabase}')    
-
+    return create_engine(URL("mysql", username=dbUser, password=dbPass, host=dbHost, database=dbDatabase))    
 def databaseSetup():
     sql_waifuUserTable = '''
         CREATE TABLE IF NOT EXISTS userWaifu (
