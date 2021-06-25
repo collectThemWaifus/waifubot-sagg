@@ -5,7 +5,7 @@ from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthor
 import os
 app = Flask(__name__)
 
-envList = ["DISCORD_CLIENT_SECRET", "DISCORD_BOT_TOKEN", "DISCORD_REDIRECT_URI"]
+envList = ["DISCORD_CLIENT_SECRET", "DISCORD_BOT_TOKEN", "DISCORD_REDIRECT_URI", "DISCORD_CLIENT_ID"]
 
 for env in envList:
     if (os.getenv(env) is None): # Use Discord Secrets as backup (this is not elgant, Too Bad!)
@@ -17,7 +17,10 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY")
 if ( app.secret_key is None):
     app.secret_key = open(f"/run/secrets/FLASK_SECRET_KEY").read()
 
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"      # !! Only in development environment.
+if (os.getenv("FLASK_ENV") == "development"):
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"      # !! Only in development environment.
+else:
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "false"      
 
 
 discord = DiscordOAuth2Session(app) 
