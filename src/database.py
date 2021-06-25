@@ -1,11 +1,11 @@
 import os
 from typing import List
+from sqlalchemy.engine import Engine
+from sqlalchemy.sql.expression import text
+from basemodels import Waifu, User
 
 from flask_discord.client import DiscordOAuth2Session
-from flask_discord.models import user
 from sqlalchemy.engine import create_engine, result
-from basemodels import Waifu, User
-from sqlalchemy.engine import Engine
 
 def getEngine () -> Engine:
 
@@ -34,12 +34,12 @@ def databaseSetup():
             PRIMARY KEY (userid, time)
         );
     '''
-    getEngine().execute(sql_waifuUserTable)
+    with getEngine().connect() as connection:
+        connection.execute(text(sql_waifuUserTable))
     print("Tables Ready!")
 def storeWaifu(waifu : Waifu, userid : str):
-    sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (?, ?, ?, ?)"
-    sql_vals = (userid, waifu.name , waifu.imageURL, waifu.favourites)
-    getEngine().execute(sql_storeWaifu, sql_vals)
+    sql_storeWaifu = text("INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (:userid, :name, :imageURL, :favourites)")
+    getEngine().execute(sql_storeWaifu, {"userid":userid, "name":waifu.name, "imageURL" : waifu.imageURL, "favourites": waifu.favourites})
 
 def getWaifu(userid: str) -> List[Waifu]:
     sql_storeWaifu = "SELECT name, imageURL, favourites FROM userWaifu WHERE userid = ?"

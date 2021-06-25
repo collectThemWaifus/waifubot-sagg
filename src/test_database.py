@@ -23,7 +23,7 @@ def createTestUser(totalValue : int):
     return testUser
 
 def test_checkWaifuDuplicate():
-    testWaifuList = findWaifu(2)
+    testWaifuList = findWaifu(2, 1)
     testWaifu = testWaifuList[0]
     storeWaifu(testWaifu, 185918091685920768)
     assert checkWaifuDuplicate(testWaifu.name)
@@ -32,7 +32,7 @@ def test_checkWaifuDuplicate():
     assert not checkWaifuDuplicate(newTestWaifu.name)
 
 def test_StoreGetWaifu():
-    testWaifu = findWaifu(1)[0]
+    testWaifu = findWaifu(1, 1)[0]
     storeWaifu(testWaifu, 185918091685920768)
     assert testWaifu == getWaifu(185918091685920768)[0]
     assert not getWaifu(12345677889)

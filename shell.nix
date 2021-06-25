@@ -7,6 +7,7 @@ let
   # Python
   python-env = unstable.poetry2nix.mkPoetryEnv {
     projectDir = ./.;
+    python = unstable.python37;
   };
 in pkgs.mkShell {
   buildInputs = [

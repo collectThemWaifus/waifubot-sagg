@@ -4,12 +4,12 @@ import sys
 import time
 from discord.ext import commands
 from collection import findWaifu
-from database import storeWaifu
+from database import databaseSetup, storeWaifu
 import os 
+databaseSetup()
 token = os.getenv("DISCORD_BOT_TOKEN")  
 if (token is None):
     token = open(f"/run/secrets/DISCORD_BOT_TOKEN").read()
-
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)
