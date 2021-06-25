@@ -21,7 +21,6 @@ if ( app.secret_key is None):
 if (os.getenv("FLASK_ENV") == "development"):
     os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "true"      # !! Only in development environment.
 
-app.config["DISCORD_CLIENT_ID"] = os.getenv("DISCORD_CLIENT_ID") 
 discord = DiscordOAuth2Session(app) 
 databaseSetup()
 print(Fore.GREEN + "PROCESS:\t" + Fore.MAGENTA + "SQL tables ready!")
@@ -73,6 +72,6 @@ def me():
             <img src='{user.avatar_url}' />
         </body>
     </html>"""
-serve(app, listen='*:8080')
+serve(app, listen='*:5200')
 #TODO: /getWaifu/USERID
 
