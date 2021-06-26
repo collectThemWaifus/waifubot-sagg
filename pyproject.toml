@@ -17,6 +17,7 @@ SQLAlchemy = "^1.4.19"
 MarkupSafe = "^2.0.1"
 mysqlclient = "^2.0.3"
 waitress = "^2.0.0"
+Flask-Caching = "^1.10.1"
 
 [tool.poetry.dev-dependencies]
 
