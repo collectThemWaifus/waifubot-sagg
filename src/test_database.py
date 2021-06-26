@@ -16,7 +16,6 @@ def resetDB():
 def createTestUser(totalValue : int):
     testUser = User(
         name="Saggins",
-        avatarURL="https://cdn.discordapp.com/avatars/185918091685920768/4b6ce0c047564ae3d9508089dd611b97.png",
         totalValue=totalValue,
         userId=185918091685920768
         )
