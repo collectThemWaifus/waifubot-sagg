@@ -68,21 +68,17 @@ def getLeaderboardUsers() -> List[User]:
 def home():
     listValuedWaifu = getAllValuedWaifu()
     listOfAllPlayerInventory = getLeaderboardUsers()
-    return render_template("index.html",
-        listPlayers = listOfAllPlayerInventory,
-        listWaifus=listValuedWaifu)
     if (not discord.authorized):
 
         return render_template("index.html",
-            user=discord.fetch_user(),
             authorized=discord.authorized,
             listPlayers = listOfAllPlayerInventory,
-            listWaifu=listValuedWaifu)
+            listWaifus=listValuedWaifu)
     return render_template("index.html",
                     user=discord.fetch_user(),
                     authorized=discord.authorized,
                     listPlayers = listOfAllPlayerInventory,
-                    listWaifu=listValuedWaifu)
+                    listWaifus=listValuedWaifu)
     
 
 
