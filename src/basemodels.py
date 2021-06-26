@@ -8,6 +8,5 @@ class Waifu(BaseModel):
 
 class User(BaseModel):
     name: str
-    avatarURL: str
     totalValue: str
     userId: str
