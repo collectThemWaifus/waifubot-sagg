@@ -6,6 +6,7 @@ class Waifu(BaseModel):
     imageURL: str 
     name: str 
     sacrificed: int = 0 # 0 for alive, 1 for has been sacrificed
+    claimerId: Optional[str]
 
 class User(BaseModel):
     name: Optional[str]

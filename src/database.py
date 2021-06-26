@@ -76,7 +76,7 @@ def getUserFromId(userid: int) -> User:
     result = getEngine().execute(text(sql_getUsers), {"userid" : userid}).one()
     return User(userId=userid, totalValue=result[0])
 
-def getValuedWaifu(desc : bool, limit: int, bot_request : DiscordOAuth2Session.bot_request) -> List[Waifu]:
+def getValuedWaifu(desc : bool, limit: int) -> List[Waifu]:
     if (desc):
         sql_getMostValuedWaifu = "SELECT name, imageURL, favourites, userid FROM userWaifu ORDER BY favourites DESC LIMIT :limit"
     else:
@@ -85,6 +85,6 @@ def getValuedWaifu(desc : bool, limit: int, bot_request : DiscordOAuth2Session.b
     listOfWaifu = []
     for value in result:
         newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
-        newWaifu.claimName = getUserFromId(value[3], bot_request).name
+        newWaifu.claimerId = getUserFromId(value[3]).userId
         listOfWaifu.append(newWaifu)
     return listOfWaifu
