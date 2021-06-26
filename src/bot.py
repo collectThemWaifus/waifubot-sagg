@@ -10,6 +10,9 @@ databaseSetup()
 token = os.getenv("DISCORD_BOT_TOKEN")  
 if (token is None):
     token = open(f"/run/secrets/DISCORD_BOT_TOKEN").read()
+backendURL = os.getenv("BOT_URL")
+if (backendURL is None ):
+    backendURL = "127.0.0.1:5200"
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)
@@ -105,7 +108,7 @@ async def help(ctx):
 async def inventory(ctx):
     embed = discord.Embed(
         title = 'Click this link to view your inventory',
-        url = f"http://127.0.0.1:5000/inventory/{ctx.message.author.id}",
+        url = f"http://{backendURL}/inventory/{ctx.message.author.id}",
         colour = discord.Color.blurple()
     )
     await ctx.message.author.send(embed=embed)
