@@ -56,10 +56,10 @@ async def on_reaction_add(reaction, user):
         return
     global unclaimedWaifus
     try: #check if waifu exsits
-        messageWaifu = unclaimedWaifus.get(str(reaction.message.id))
+        messageWaifu = unclaimedWaifus.get(str(reaction.message.id))       
     except:
         return
-    if str(reaction.emoji) == '👍' and reaction.count == 2 and not(checkWaifuDuplicate(messageWaifu.name)):
+    if str(reaction.emoji) == '👍' and reaction.count == 2:
         embed2 = discord.Embed(
             title = 'Claimed', 
             description = f'Claimed by {user.name}',
@@ -84,8 +84,11 @@ async def on_reaction_add(reaction, user):
 async def waifu(ctx : commands.Context):
     valid_reactions = ['👍']
     listOfRandomWaifu = findWaifu(30,1)
-    randomNum = random.randint(0, 29)
-    randomWaifu = listOfRandomWaifu[randomNum]
+    while True:
+        randomNum = random.randint(0, 29)
+        randomWaifu = listOfRandomWaifu[randomNum]
+        if not(checkWaifuDuplicate(randomWaifu.name)):
+            break
     embed = discord.Embed(
         title = 'Unclaimed',
         description = 'Unclaimed',
