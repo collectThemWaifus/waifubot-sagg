@@ -72,7 +72,6 @@ async def on_reaction_add(reaction, user):
     else:
         embed2 = discord.Embed(
             title = 'Already Claimed', 
-            description = f'Claimed by []',
             colour = discord.Colour.red()
         )
         embed2.set_image(url= messageWaifu.imageURL)
