@@ -136,6 +136,17 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "flask-caching"
+version = "1.10.1"
+description = "Adds caching support to your Flask application"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+Flask = "*"
+
+[[package]]
 name = "flask-discord"
 version = "0.1.64"
 description = "Discord OAuth2 extension for Flask."
@@ -491,7 +502,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "36369f5b52d6bc8b5899b2855309a3b66547d1e8ac88239256e2509e976cadf8"
+content-hash = "8558f1e6f8372ea16f02680f8fd9a3001aacb699d169d77d0c0c9332fafe48a2"
 
 [metadata.files]
 aiohttp = [
@@ -576,6 +587,10 @@ discord = [
 flask = [
     {file = "Flask-2.0.1-py3-none-any.whl", hash = "sha256:a6209ca15eb63fc9385f38e452704113d679511d9574d09b2cf9183ae7d20dc9"},
     {file = "Flask-2.0.1.tar.gz", hash = "sha256:1c4c257b1892aec1398784c63791cbaa43062f1f7aeb555c4da961b20ee68f55"},
+]
+flask-caching = [
+    {file = "Flask-Caching-1.10.1.tar.gz", hash = "sha256:cf19b722fcebc2ba03e4ae7c55b532ed53f0cbf683ce36fafe5e881789a01c00"},
+    {file = "Flask_Caching-1.10.1-py3-none-any.whl", hash = "sha256:bcda8acbc7508e31e50f63e9b1ab83185b446f6b6318bd9dd1d45626fba2e903"},
 ]
 flask-discord = [
     {file = "Flask-Discord-0.1.64.tar.gz", hash = "sha256:c5c90ebc356929f13779ca7262370739b77fdb5ff9b2b9b809376a87d42fe4c1"},

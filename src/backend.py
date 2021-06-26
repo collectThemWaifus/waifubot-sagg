@@ -4,9 +4,18 @@ from database import databaseSetup, getAllUsers, getValuedWaifu, getWaifu
 from flask import Flask, render_template, redirect, url_for
 from colorama import Fore
 from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
+from flask_caching import Cache
 import os
 from waitress import serve
+
+config = {
+    "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": 120
+}
 app = Flask(__name__)
+# tell Flask to use the above defined config
+app.config.from_mapping(config)
+cache = Cache(app)
 
 envList = ["DISCORD_CLIENT_SECRET", "DISCORD_BOT_TOKEN", "DISCORD_REDIRECT_URI", "DISCORD_CLIENT_ID"]
 
@@ -43,13 +52,22 @@ def completeAllWaifu ( listOfIncomplete : List[Waifu]):
     for waifu in listOfIncomplete:
         completeBackendUser(waifu.claimerUser) 
 
-@app.route("/")
-def home():
+@cache.cached(key_prefix='allValuedWaifu')
+def getAllValuedWaifu () -> List[Waifu]:
     listValuedWaifu = getValuedWaifu(True, 10)
     completeAllWaifu(listValuedWaifu)
-    
+    return listValuedWaifu
+
+@cache.cached(key_prefix='allLeaderboardUsers')
+def getLeaderboardUsers() -> List[User]:
     listOfAllPlayerInventory = getAllUsers()
     completeAllBackendUser(listOfAllPlayerInventory)
+    return listOfAllPlayerInventory
+
+@app.route("/")
+def home():
+    listValuedWaifu = getAllValuedWaifu()
+    listOfAllPlayerInventory = getLeaderboardUsers()
     return render_template("index.html",
         listPlayers = listOfAllPlayerInventory,
         listWaifus=listValuedWaifu)

@@ -3,9 +3,7 @@ from typing import List
 from sqlalchemy.engine import Engine
 from sqlalchemy.sql.expression import text
 from basemodels import Waifu, User
-
-from flask_discord.client import DiscordOAuth2Session
-from sqlalchemy.engine import create_engine, result
+from sqlalchemy.engine import create_engine
 
 from sqlalchemy.engine.url import URL
 
