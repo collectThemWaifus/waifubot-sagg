@@ -86,5 +86,6 @@ def getValuedWaifu(desc : bool, limit: int) -> List[Waifu]:
     for value in result:
         newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
         newWaifu.claimerId = getUserFromId(value[3]).userId
+        newWaifu.claimerUser = getUserFromId(value[3])
         listOfWaifu.append(newWaifu)
     return listOfWaifu

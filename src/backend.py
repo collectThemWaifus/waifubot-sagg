@@ -1,3 +1,5 @@
+from typing import List
+from basemodels import User, Waifu
 from database import databaseSetup, getAllUsers, getValuedWaifu, getWaifu
 from flask import Flask, render_template, redirect, url_for
 from colorama import Fore
@@ -24,15 +26,47 @@ if (os.getenv("FLASK_ENV") == "development"):
 discord = DiscordOAuth2Session(app) 
 databaseSetup()
 print(Fore.GREEN + "PROCESS:\t" + Fore.MAGENTA + "SQL tables ready!")
+
+def completeBackendUser(incomplete: User) -> User:
+    userObject = discord.bot_request(f"/users/{incomplete.userId}")
+    if (incomplete.name is None):
+        incomplete.name = userObject["username"]
+    if (incomplete.avatarURL is None):
+        avatarHash = userObject["avatar"]
+        incomplete.avatarURL = (f"https://cdn.discordapp.com/avatars/{incomplete.userId}/{avatarHash}.png")
+
+def completeAllBackendUser (listOfIncomplete : List[User]):
+    for incompleteUser in listOfIncomplete:
+        completeBackendUser(incompleteUser)
+
+def completeAllWaifu ( listOfIncomplete : List[Waifu]):
+    for waifu in listOfIncomplete:
+        completeBackendUser(waifu.claimerUser) 
+
 @app.route("/")
 def home():
-    listOfAllPlayerInventory = getAllUsers(discord.bot_request)
-    listValuedWaifu = getValuedWaifu(True, 10, discord.bot_request)
+    listValuedWaifu = getValuedWaifu(True, 10)
+    completeAllWaifu(listValuedWaifu)
+    
+    listOfAllPlayerInventory = getAllUsers()
+    completeAllBackendUser(listOfAllPlayerInventory)
     return render_template("index.html",
-                        user=discord.fetch_user(),
-                        authorized=discord.authorized,
-                        listPlayers=listOfAllPlayerInventory,
-                        listWaiufs=listValuedWaifu)
+        listPlayers = listOfAllPlayerInventory,
+        listWaifus=listValuedWaifu)
+    if (not discord.authorized):
+
+        return render_template("index.html",
+            user=discord.fetch_user(),
+            authorized=discord.authorized,
+            listPlayers = listOfAllPlayerInventory,
+            listWaifu=listValuedWaifu)
+    return render_template("index.html",
+                    user=discord.fetch_user(),
+                    authorized=discord.authorized,
+                    listPlayers = listOfAllPlayerInventory,
+                    listWaifu=listValuedWaifu)
+    
+
 
 @app.route('/inventory/<userID>')
 def hello_world(userID=None):
@@ -53,11 +87,6 @@ def callback():
     discord.callback()
     return redirect(url_for(".home"))
 
-
-@app.errorhandler(Unauthorized)
-def redirect_unauthorized(e):
-    return redirect(url_for("login"))
-
 	
 @app.route("/me/")
 @requires_authorization
@@ -72,6 +101,7 @@ def me():
             <img src='{user.avatar_url}' />
         </body>
     </html>"""
+
 serve(app, listen='*:5200')
 #TODO: /getWaifu/USERID
 

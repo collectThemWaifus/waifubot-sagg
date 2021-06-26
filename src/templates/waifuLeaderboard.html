@@ -4,13 +4,13 @@
         <h3>Most Valued Waifu</h3>
     </div>
     <div class=" row justify-content-md-center">
-        {% for waifu in listWaifus.keys() %}
+        {% for waifu in listWaifus %}
         <div class="card" style="width: 9rem">
             <img src="{{ waifu.imageURL }}" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">{{ waifu.name }}</h5>
               <p class="card-text"> <b>Total Value</b> {{ waifu.favourites }} </p>
-              <p class="card-text"> <b>Current Claimer:</b> {{ listWaifus[waifu] }}</p>
+              <p class="card-text"> <b>Current Claimer:</b> {{ waifu.claimerUser.name }}</p>
               <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
           </div>
