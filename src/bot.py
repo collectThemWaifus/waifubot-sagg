@@ -2,9 +2,11 @@ import discord
 import random
 import sys
 import time
+from discord import message
 from discord.ext import commands
+from discord.ext.commands.core import check
 from collection import findWaifu
-from database import databaseSetup, storeWaifu
+from database import databaseSetup, storeWaifu, checkWaifuDuplicate
 import os 
 databaseSetup()
 token = os.getenv("DISCORD_BOT_TOKEN")  
@@ -57,7 +59,7 @@ async def on_reaction_add(reaction, user):
         messageWaifu = unclaimedWaifus.get(str(reaction.message.id))
     except:
         return
-    if str(reaction.emoji) == '👍' and reaction.count == 2:
+    if str(reaction.emoji) == '👍' and reaction.count == 2 and not(checkWaifuDuplicate(messageWaifu.name)):
         embed2 = discord.Embed(
             title = 'Claimed', 
             description = f'Claimed by {user.name}',
@@ -65,8 +67,18 @@ async def on_reaction_add(reaction, user):
         )
         embed2.set_image(url= messageWaifu.imageURL)
         embed2.add_field(name = 'Name', value = f'{messageWaifu.name}', inline = False)
-        await reaction.message.edit(embed=embed2)  
+        await reaction.message.edit(embed=embed2)
         storeWaifu(messageWaifu, user.id)
+    else:
+        embed2 = discord.Embed(
+            title = 'Already Claimed', 
+            description = f'Claimed by []',
+            colour = discord.Colour.red()
+        )
+        embed2.set_image(url= messageWaifu.imageURL)
+        embed2.add_field(name = 'Name', value = f'{messageWaifu.name}', inline = False)
+        await reaction.message.edit(embed=embed2)
+
 
 
 @client.command(aliases = ['wa'])
