@@ -54,8 +54,8 @@ def getWaifu(userid: str) -> List[Waifu]:
     return listOfWaifu
 
 def checkWaifuDuplicate(name : str) -> bool:
-    sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = ?name"
-    result = getEngine().execute(text(sql_checkWaifuDuplicate), {"name": name}).one()
+    sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = :name"
+    result = getEngine().execute(text(sql_checkWaifuDuplicate), {"name": name}).one_or_none()
     if (result is None):
         return False
     return True
