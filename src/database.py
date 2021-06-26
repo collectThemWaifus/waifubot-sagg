@@ -39,12 +39,12 @@ def databaseSetup():
         connection.execute(text(sql_waifuUserTable))
     print("Tables Ready!")
 def storeWaifu(waifu : Waifu, userid : str):
-    sql_storeWaifu = text("INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (:userid, :name, :imageURL, :favourites)")
-    getEngine().execute(sql_storeWaifu, {"userid":userid, "name":waifu.name, "imageURL" : waifu.imageURL, "favourites": waifu.favourites})
+    sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (:userid, :name, :imageURL, :favourites)"
+    getEngine().execute(text(sql_storeWaifu), {"userid":userid, "name":waifu.name, "imageURL" : waifu.imageURL, "favourites": waifu.favourites})
 
 def getWaifu(userid: str) -> List[Waifu]:
     sql_storeWaifu = "SELECT name, imageURL, favourites FROM userWaifu WHERE userid = :userid"
-    result = getEngine().execute(sql_storeWaifu, {"userid": userid}).all()
+    result = getEngine().execute(text(sql_storeWaifu), {"userid": userid}).all()
     listOfWaifu = []
     for value in result:
         newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
@@ -55,13 +55,13 @@ def getWaifu(userid: str) -> List[Waifu]:
 
 def checkWaifuDuplicate(name : str) -> bool:
     sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = ?name"
-    result = getEngine().execute(sql_checkWaifuDuplicate, {"name": name}).one()
+    result = getEngine().execute(text(sql_checkWaifuDuplicate), {"name": name}).one()
     if (result is None):
         return False
     return True
 def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
     sql_getUsers =  "SELECT DISTINCT userid, SUM(favourites) FROM userWaifu GROUP BY userid ORDER BY SUM(favourites) DESC"
-    result = getEngine().execute(sql_getUsers)
+    result = getEngine().execute(text(sql_getUsers))
     listOfUsers = []
     for value in result.all():
         userId = value[0]
@@ -73,7 +73,7 @@ def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
 
 def getUserFromId(userid: int, bot_request : DiscordOAuth2Session.bot_request) -> User:
     sql_getUsers =  "SELECT SUM(favourites) FROM userWaifu WHERE userid=:userid ORDER BY SUM(favourites) DESC"
-    result = getEngine().execute(sql_getUsers, {"userid" : userid}).one()
+    result = getEngine().execute(text(sql_getUsers), {"userid" : userid}).one()
     userObject = bot_request(f"/users/{userid}")
     avatarHash = userObject["avatar"]
     return User(userId=userid, totalValue=result[0], name=userObject["username"], avatarURL=(f"https://cdn.discordapp.com/avatars/{userid}/{avatarHash}.png"))
@@ -83,7 +83,7 @@ def getValuedWaifu(desc : bool, limit: int, bot_request : DiscordOAuth2Session.b
         sql_getMostValuedWaifu = "SELECT name, imageURL, favourites, userid FROM userWaifu ORDER BY favourites DESC LIMIT :limit"
     else:
         sql_getMostValuedWaifu = "SELECT name, imageURL, favourites, userid FROM userWaifu ORDER BY favourites ASC LIMIT :limit"
-    result = getEngine().execute(sql_getMostValuedWaifu, {"limit": limit}).all()
+    result = getEngine().execute(text(sql_getMostValuedWaifu), {"limit": limit}).all()
     listOfWaifu = []
     for value in result:
         newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
