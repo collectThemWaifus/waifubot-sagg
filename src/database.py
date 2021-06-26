@@ -59,24 +59,22 @@ def checkWaifuDuplicate(name : str) -> bool:
     if (result is None):
         return False
     return True
-def getAllUsers(bot_request: DiscordOAuth2Session.bot_request) -> List[User]:
+def getAllUsers() -> List[User]:
     sql_getUsers =  "SELECT DISTINCT userid, SUM(favourites) FROM userWaifu GROUP BY userid ORDER BY SUM(favourites) DESC"
     result = getEngine().execute(text(sql_getUsers))
     listOfUsers = []
     for value in result.all():
         userId = value[0]
-        newUser = getUserFromId(userId, bot_request)
+        newUser = getUserFromId(userId)
         listOfUsers.append(newUser)
     if ( result is None):
         return False
     return listOfUsers
 
-def getUserFromId(userid: int, bot_request : DiscordOAuth2Session.bot_request) -> User:
+def getUserFromId(userid: int) -> User:
     sql_getUsers =  "SELECT SUM(favourites) FROM userWaifu WHERE userid=:userid ORDER BY SUM(favourites) DESC"
     result = getEngine().execute(text(sql_getUsers), {"userid" : userid}).one()
-    userObject = bot_request(f"/users/{userid}")
-    avatarHash = userObject["avatar"]
-    return User(userId=userid, totalValue=result[0], name=userObject["username"], avatarURL=(f"https://cdn.discordapp.com/avatars/{userid}/{avatarHash}.png"))
+    return User(userId=userid, totalValue=result[0])
 
 def getValuedWaifu(desc : bool, limit: int, bot_request : DiscordOAuth2Session.bot_request) -> List[Waifu]:
     if (desc):

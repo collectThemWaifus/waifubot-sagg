@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 class Waifu(BaseModel):
@@ -7,6 +8,7 @@ class Waifu(BaseModel):
     sacrificed: int = 0 # 0 for alive, 1 for has been sacrificed
 
 class User(BaseModel):
-    name: str
+    name: Optional[str]
+    avatarURL: Optional[str]
     totalValue: str
     userId: str
