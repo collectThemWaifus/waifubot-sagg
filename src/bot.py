@@ -5,16 +5,18 @@ import time
 from discord import message
 from discord.ext import commands
 from discord.ext.commands.core import check
-from collection import findWaifu
+from collection import GetCasteWaifu, findWaifu
 from database import databaseSetup, storeWaifu, checkWaifuDuplicate
 import os 
+
+
 databaseSetup()
 token = os.getenv("DISCORD_BOT_TOKEN")  
 if (token is None):
     token = open(f"/run/secrets/DISCORD_BOT_TOKEN").read()
 backendURL = os.getenv("BOT_URL")
 if (backendURL is None ):
-    backendURL = "127.0.0.1:5200"
+    backendURL = "56e9a0e7cd36.ngrok.io"
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)
@@ -67,26 +69,34 @@ async def on_reaction_add(reaction, user):
         )
         embed2.set_image(url= messageWaifu.imageURL)
         embed2.add_field(name = 'Name', value = f'{messageWaifu.name}', inline = False)
+        embed2.add_field(name = 'Rank', value = f'{rank}', inline = False)
         await reaction.message.edit(embed=embed2)
         storeWaifu(messageWaifu, user.id)
-    else:
-        embed2 = discord.Embed(
-            title = 'Already Claimed', 
-            colour = discord.Colour.red()
-        )
-        embed2.set_image(url= messageWaifu.imageURL)
-        embed2.add_field(name = 'Name', value = f'{messageWaifu.name}', inline = False)
-        await reaction.message.edit(embed=embed2)
 
 
 
 @client.command(aliases = ['wa'])
 async def waifu(ctx : commands.Context):
     valid_reactions = ['👍']
-    listOfRandomWaifu = findWaifu(30,1)
+    randomNum = random.randint(1, 100)
+    global rank
+    if randomNum == 1:
+        rank = 'SSS'
+    elif randomNum <=3:
+        rank = 'SS'
+    elif randomNum <=8:
+        rank = 'S'
+    elif randomNum <=14:
+        rank = 'A'
+    elif randomNum <=22:
+        rank = 'B'
+    elif randomNum <=31:
+        rank = 'C'
+    else:
+        rank = 'D'
+    
     while True:
-        randomNum = random.randint(0, 29)
-        randomWaifu = listOfRandomWaifu[randomNum]
+        randomWaifu = GetCasteWaifu(rank)
         if not(checkWaifuDuplicate(randomWaifu.name)):
             break
     embed = discord.Embed(
@@ -96,6 +106,7 @@ async def waifu(ctx : commands.Context):
     )
     embed.set_image(url= randomWaifu.imageURL)
     embed.add_field(name = 'Name', value = f'{randomWaifu.name}', inline = False)
+    embed.add_field(name = 'Rank', value = f'{rank}', inline = False)
     msg = await ctx.send(embed=embed)
     unclaimedWaifus[str(msg.id)] = randomWaifu
 
