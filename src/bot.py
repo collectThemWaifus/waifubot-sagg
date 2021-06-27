@@ -69,7 +69,7 @@ async def on_reaction_add(reaction, user):
         )
         embed2.set_image(url= messageWaifu.imageURL)
         embed2.add_field(name = 'Name', value = f'{messageWaifu.name}', inline = False)
-        embed2.add_field(name = 'Rank', value = f'{rank}', inline = False)
+        embed2.add_field(name = 'Rank', value = f'{reaction.message.embeds[0].fields[1].value}', inline = False)
         await reaction.message.edit(embed=embed2)
         storeWaifu(messageWaifu, user.id)
 
@@ -79,9 +79,7 @@ async def on_reaction_add(reaction, user):
 async def waifu(ctx : commands.Context):
     if ctx.message.guild == None:
         return
-    valid_reactions = ['👍']
     randomNum = random.randint(1, 100)
-    global rank
     if randomNum == 1:
         rank = 'SSS'
     elif randomNum <=3:
