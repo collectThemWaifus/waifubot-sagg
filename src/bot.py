@@ -122,7 +122,7 @@ async def help(ctx):
         description = 'List of commands for Waifu Bot',
         colour = discord.Colour.green()
     )
-    #embed.set_thumbnail(url = 'https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg')
+    embed.set_thumbnail(url = f'{client.user.avatar_url}')
     embed.add_field(name = 'waifu (wa)', value = 'Displays a random waifu, react to claim.', inline = False)
     embed.add_field(name = 'inventory (inv)', value = 'Sends you a link to a website containing your inventory', inline = False)
     embed.add_field(name = 'help (h)', value = 'Displays this message!', inline = False)
