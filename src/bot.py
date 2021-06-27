@@ -16,7 +16,7 @@ if (token is None):
     token = open(f"/run/secrets/DISCORD_BOT_TOKEN").read()
 backendURL = os.getenv("BOT_URL")
 if (backendURL is None ):
-    backendURL = "56e9a0e7cd36.ngrok.io"
+    backendURL = "127.0.0.1:5200"
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)
