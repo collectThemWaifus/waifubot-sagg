@@ -77,6 +77,8 @@ async def on_reaction_add(reaction, user):
 
 @client.command(aliases = ['wa'])
 async def waifu(ctx : commands.Context):
+    if ctx.message.guild == None:
+        return
     valid_reactions = ['👍']
     randomNum = random.randint(1, 100)
     global rank
