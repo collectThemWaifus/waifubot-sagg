@@ -61,7 +61,7 @@ async def on_reaction_add(reaction, user):
         messageWaifu = unclaimedWaifus.get(str(reaction.message.id))       
     except:
         return
-    if str(reaction.emoji) == '👍' and reaction.count == 2:
+    if str(reaction.emoji) == '👍' and reaction.count == 2 and reaction.message.edited_at == None:
         embed2 = discord.Embed(
             title = 'Claimed', 
             description = f'Claimed by {user.name}',
