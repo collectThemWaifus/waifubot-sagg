@@ -16,7 +16,7 @@ if (token is None):
     token = open(f"/run/secrets/DISCORD_BOT_TOKEN").read()
 backendURL = os.getenv("BOT_URL")
 if (backendURL is None ):
-    backendURL = "ecb7727e22f2.ngrok.io"
+    backendURL = "127.0.0.1:5200"
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)
@@ -94,11 +94,11 @@ async def waifu(ctx : commands.Context):
         rank = 'C'
     else:
         rank = 'D'
+    
     while True:
         randomWaifu = GetCasteWaifu(rank)
         if not(checkWaifuDuplicate(randomWaifu.name)):
             break
-
     embed = discord.Embed(
         title = 'Unclaimed',
         description = 'Unclaimed',
