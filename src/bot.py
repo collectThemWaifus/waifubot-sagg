@@ -76,6 +76,7 @@ async def on_reaction_add(reaction, user):
 
 
 @client.command(aliases = ['wa'])
+@commands.cooldown(10, 3600, commands.BucketType.user)
 async def waifu(ctx : commands.Context):
     if ctx.message.guild == None:
         return
