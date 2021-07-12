@@ -33,9 +33,26 @@ def databaseSetup():
             PRIMARY KEY (userid, time)
         );
     '''
+    sql_moneyTable = '''
+        CREATE TABLE IF NOT EXISTS userWaifu (
+            userid char(38) NOT NULL,
+            balance MEDIUMINT NOT NULL,
+            time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (userid, time));
+    '''
+    sql_transactionTable = '''
+        CREATE TABLE IF NOT EXISTS userWaifu (
+            userid char(38) NOT NULL,
+            description VARCHAR(100) NOT NULL,
+            time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (userid, time));
+    '''
+    listOfTableQueries = [sql_moneyTable, sql_transactionTable, sql_waifuUserTable]
     with getEngine().connect() as connection:
-        connection.execute(text(sql_waifuUserTable))
+        for query in listOfTableQueries:
+            connection.execute(text(query))
     print("Tables Ready!")
+
 def storeWaifu(waifu : Waifu, userid : str):
     sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (:userid, :name, :imageURL, :favourites)"
     getEngine().execute(text(sql_storeWaifu), {"userid":userid, "name":waifu.name, "imageURL" : waifu.imageURL, "favourites": waifu.favourites})
