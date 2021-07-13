@@ -1,12 +1,8 @@
-from data.collection import GetCasteWaifu, findWaifu
 import discord
-import random
-import sys
 import time
-from discord import message
+from discord.cogs.ClaimWaifu import ClaimWaifu
 from discord.ext import commands
-from discord.ext.commands.core import check
-from data.database import databaseSetup, storeWaifu, checkWaifuDuplicate
+from data.database import databaseSetup
 import os 
 
 
@@ -22,6 +18,7 @@ intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)
 client.remove_command('help')
 
+client.add_cog(ClaimWaifu)
 
 def getnum(str):
     ret = ''
@@ -51,75 +48,6 @@ async def on_message(message):
 
     await client.process_commands(message)
 
-#key is MessageID, and Value is Waifu
-async def timeTask(): 
-    await client.wait_until_ready()
-    while not client.is_closed:
-        
-        pass
-client.loop.create_task(timeTask())
-unclaimedWaifus = {}
-@client.event
-async def on_reaction_add(reaction, user):
-    if (user.bot): 
-        return
-    global unclaimedWaifus
-    try: #check if waifu exsits
-        messageWaifu = unclaimedWaifus.get(str(reaction.message.id))       
-    except:
-        return
-    if str(reaction.emoji) == '👍' and reaction.count == 2 and reaction.message.edited_at == None:
-        embed2 = discord.Embed(
-            title = 'Claimed', 
-            description = f'Claimed by {user.name}',
-            colour = discord.Colour.red()
-        )
-        embed2.set_image(url= messageWaifu.imageURL)
-        embed2.add_field(name = 'Name', value = f'{messageWaifu.name}', inline = False)
-        embed2.add_field(name = 'Rank', value = f'{reaction.message.embeds[0].fields[1].value}', inline = False)
-        await reaction.message.edit(embed=embed2)
-        storeWaifu(messageWaifu, user.id)
-
-
-
-@client.command(aliases = ['wa'])
-@commands.cooldown(10, 3600, commands.BucketType.user)
-async def waifu(ctx : commands.Context):
-    if ctx.message.guild == None:
-        return
-    randomNum = random.randint(1, 100)
-    if randomNum == 1:
-        rank = 'SSS'
-    elif randomNum <=3:
-        rank = 'SS'
-    elif randomNum <=8:
-        rank = 'S'
-    elif randomNum <=14:
-        rank = 'A'
-    elif randomNum <=22:
-        rank = 'B'
-    elif randomNum <=31:
-        rank = 'C'
-    else:
-        rank = 'D'
-    
-    while True:
-        randomWaifu = GetCasteWaifu(rank)
-        if not(checkWaifuDuplicate(randomWaifu.name)):
-            break
-    embed = discord.Embed(
-        title = 'Unclaimed',
-        description = 'Unclaimed',
-        colour = discord.Colour.blue()
-    )
-    embed.set_image(url= randomWaifu.imageURL)
-    embed.add_field(name = 'Name', value = f'{randomWaifu.name}', inline = False)
-    embed.add_field(name = 'Rank', value = f'{rank}', inline = False)
-    msg = await ctx.send(embed=embed)
-    unclaimedWaifus[str(msg.id)] = randomWaifu
-
-    #await ctx.send("React with 👍 within **4** seconds to claim!")
-    await msg.add_reaction('👍')
 
 @client.command(aliases = ['h'])
 async def help(ctx):
