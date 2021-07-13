@@ -1,7 +1,7 @@
 from typing import List
 import requests
 import random
-from basemodels import Waifu
+from data.basemodels import Waifu
 
 def findWaifu(ammount : int,whichpage: int) -> List[Waifu]:
 

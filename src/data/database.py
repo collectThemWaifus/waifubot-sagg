@@ -2,7 +2,7 @@ import os
 from typing import List
 from sqlalchemy.engine import Engine
 from sqlalchemy.sql.expression import text
-from basemodels import Waifu, User
+from data.basemodels import Waifu, User
 from sqlalchemy.engine import create_engine
 
 from sqlalchemy.engine.url import URL
