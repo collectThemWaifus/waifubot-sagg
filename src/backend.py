@@ -1,10 +1,6 @@
-from typing import List
-from data.basemodels import User, Waifu
-from data.database import databaseSetup, getAllUsers, getValuedWaifu, getWaifu
-from flask import Flask, render_template, redirect, url_for
+from data.database import databaseSetup
+from flask import Flask
 from colorama import Fore
-from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
-from flask_caching import Cache
 import os
 from waitress import serve
 
