@@ -1,3 +1,4 @@
+from data.collection import GetCasteWaifu, findWaifu
 import discord
 import random
 import sys
@@ -5,8 +6,7 @@ import time
 from discord import message
 from discord.ext import commands
 from discord.ext.commands.core import check
-from collection import GetCasteWaifu, findWaifu
-from database import databaseSetup, storeWaifu, checkWaifuDuplicate
+from data.database import databaseSetup, storeWaifu, checkWaifuDuplicate
 import os 
 
 
@@ -21,6 +21,7 @@ if (backendURL is None ):
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix = '-', intents=intents)
 client.remove_command('help')
+
 
 def getnum(str):
     ret = ''
@@ -51,6 +52,12 @@ async def on_message(message):
     await client.process_commands(message)
 
 #key is MessageID, and Value is Waifu
+async def timeTask(): 
+    await client.wait_until_ready()
+    while not client.is_closed:
+        
+        pass
+client.loop.create_task(timeTask())
 unclaimedWaifus = {}
 @client.event
 async def on_reaction_add(reaction, user):

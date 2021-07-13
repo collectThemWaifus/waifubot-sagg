@@ -1,6 +1,6 @@
 from typing import List
-from basemodels import User, Waifu
-from database import databaseSetup, getAllUsers, getValuedWaifu, getWaifu
+from data.basemodels import User, Waifu
+from data.database import databaseSetup, getAllUsers, getValuedWaifu, getWaifu
 from flask import Flask, render_template, redirect, url_for
 from colorama import Fore
 from flask_discord import DiscordOAuth2Session, requires_authorization, Unauthorized
@@ -12,7 +12,9 @@ config = {
     "CACHE_TYPE": "SimpleCache",  # Flask-Caching related configs
     "CACHE_DEFAULT_TIMEOUT": 120
 }
-app = Flask(__name__)
+template_dir = os.path.abspath('./web/templates')
+static_dir = os.path.abspath('./web/static')
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 # tell Flask to use the above defined config
 app.config.from_mapping(config)
 cache = Cache(app)
