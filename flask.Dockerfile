@@ -10,5 +10,5 @@ RUN pip3 install --user poetry
 RUN python3 -m poetry install
 
 RUN pip3 install waitress
-CMD ["python3", "-m", "poetry", "run", "python3", "/app/Web/backend.py"] 
+CMD ["python3", "-m", "poetry", "run", "python3", "/app/src/backend.py"] 
  
