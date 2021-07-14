@@ -4,7 +4,7 @@ from discord import Embed
 from discord import Colour
 
 class leaderboard( commands.Cog ):
-    def __init__(self, bot: client) -> None:
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     def getnum(str):

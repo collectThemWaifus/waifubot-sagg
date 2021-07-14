@@ -1,6 +1,6 @@
 import discord
 import time
-from discord.cogs.ClaimWaifu import ClaimWaifu
+from discord.cogs.claimWaifu import claimWaifu
 from discord.cogs.inventory import inventory
 from discord.ext import commands
 from data.database import databaseSetup
@@ -23,9 +23,9 @@ client.config = {}
 client.config["backendURL"] = backendURL
 client.remove_command('help')
 
-client.add_cog(ClaimWaifu)
-client.add_cog(inventory)
-client.add_cog(bot)
+client.add_cog(claimWaifu(client))
+client.add_cog(inventory(client))
+client.add_cog(bot(client))
 
 
 client.run(token)

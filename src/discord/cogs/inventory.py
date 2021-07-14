@@ -6,12 +6,12 @@ from discord import Embed
 from discord import Colour
 
 class inventory( commands.Cog ):
-    def __init__(self, bot: client) -> None:
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @client.command(aliases = ['inv'])
+    @commands.command(aliases = ['inv'])
     @commands.cooldown(1, 2, commands.BucketType.user)
-    async def inv(self, ctx):
+    async def inventoryCommand(self, ctx):
         backendURL = self.bot.config["backendURL"]
         embed = Embed(
             title = 'Click this link to view your inventory',

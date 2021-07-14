@@ -8,8 +8,8 @@ from discord import Colour
 from data.collection import GetCasteWaifu
 from data.database import storeWaifu, checkWaifuDuplicate
 
-class ClaimWaifu( commands.Cog ):
-    def __init__(self, bot: client) -> None:
+class claimWaifu( commands.Cog ):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.unclaimedWaifus = {}
 
