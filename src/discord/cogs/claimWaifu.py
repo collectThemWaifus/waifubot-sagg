@@ -1,4 +1,7 @@
 import random
+import time
+from typing import Dict
+import discord
 
 from discord.ext import commands
 from discord import Embed
@@ -12,13 +15,26 @@ class claimWaifu(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
         self.unclaimedWaifus = {}
+        self.backlist: Dict(str, int) = {}
 
     @commands.Cog.listener()
-    async def on_reaction_add(self, reaction, user):
-        if (user.bot):
-            return
+    async def on_reaction_add(self, reaction: discord.Reaction, user: discord.User):
         global unclaimedWaifus
         messageWaifu = self.unclaimedWaifus.get(str(reaction.message.id))
+
+        if (user.bot):
+            return
+
+        try:
+            lastReactionEpoch = self.backlist[str(user.id)]
+            timeDiff = time.time() - lastReactionEpoch
+            if (timeDiff < 3600):
+                await reaction.message.channel.send(f"{user.mention}, You cannot claim another waifu for another {int((3600 - timeDiff) / 60)} minutes")
+                return
+        except KeyError:
+            pass
+
+        self.backlist[str(user.id)] = time.time()
 
         if str(reaction.emoji) == '👍' and reaction.count == 2 and reaction.message.edited_at is None:
             embed2 = Embed(
