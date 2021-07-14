@@ -28,8 +28,8 @@ class claimWaifu(commands.Cog):
         try:
             lastReactionEpoch = self.backlist[str(user.id)]
             timeDiff = time.time() - lastReactionEpoch
-            if (timeDiff < 3600):
-                await reaction.message.channel.send(f"{user.mention}, You cannot claim another waifu for another {int((3600 - timeDiff) / 60)} minutes")
+            if (timeDiff < 10800):
+                await reaction.message.channel.send(f"{user.mention}, You cannot claim another waifu for another {int((10800 - timeDiff) / 60)} minutes")
                 return
         except KeyError:
             pass
