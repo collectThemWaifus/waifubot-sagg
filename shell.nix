@@ -13,6 +13,10 @@ in pkgs.mkShell {
   buildInputs = [
     python-env
     unstable.python37Packages.pip
+    unstable.python37Packages.bandit
+    unstable.python37Packages.pep8
+    unstable.python37Packages.flake8
+    unstable.python37Packages.autopep8
     pkgs.poetry
     pkgs.sqlite
     pkgs.docker
