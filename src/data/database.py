@@ -32,7 +32,7 @@ def getEngine() -> Engine:
 def databaseSetup():
     sql_waifuUserTable = '''
         CREATE TABLE IF NOT EXISTS userWaifu (
-            userid char(38) NOT NULL,
+            userid CHAR(38) NOT NULL,
             name VARCHAR(100) NOT NULL,
             imageURL VARCHAR(100) NOT NULL,
             favourites MEDIUMINT NOT NULL,
@@ -41,8 +41,17 @@ def databaseSetup():
             PRIMARY KEY (userid, time)
         );
     '''
+    sql_UserTable = '''
+        CREATE TABLE IF NOT EXISTS userTable (
+            userid CHAR(38) NOT NULL,
+            totalpoints BIGINT,
+            PRIMARY KEY (userid) 
+        );
+    '''
+    createList = [sql_waifuUserTable, sql_UserTable]
     with getEngine().connect() as connection:
-        connection.execute(text(sql_waifuUserTable))
+        for sql in createList:
+            connection.execute(text(sql))
     print("Tables Ready!")
 
 

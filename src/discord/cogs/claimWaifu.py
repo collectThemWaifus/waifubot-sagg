@@ -48,6 +48,7 @@ class claimWaifu(commands.Cog):
             embed2.add_field(
                 name='Rank', value=f'{reaction.message.embeds[0].fields[1].value}', inline=False)
             await reaction.message.edit(embed=embed2)
+
             storeWaifu(messageWaifu, user.id)
 
     @commands.command(aliases=['wa'])
@@ -56,20 +57,21 @@ class claimWaifu(commands.Cog):
         if ctx.message.guild is None:
             return
         randomNum = random.randint(1, 100)
-        if randomNum == 1:
-            rank = 'SSS'
-        elif randomNum <= 3:
-            rank = 'SS'
-        elif randomNum <= 8:
-            rank = 'S'
-        elif randomNum <= 14:
-            rank = 'A'
-        elif randomNum <= 22:
-            rank = 'B'
-        elif randomNum <= 31:
-            rank = 'C'
-        else:
-            rank = 'D'
+        match randomNum:
+            case 1:
+                rank = 'SSS'
+            case randomNum if randomNum <= 3:
+                rank = 'SS'
+            case randomNum if randomNum <= 8:
+                rank = 'S'
+            case randomNum if randomNum <= 14:
+                rank = 'A'
+            case randomNum if randomNum <= 22:
+                rank = 'B'
+            case randomNum if randomNum <= 31:
+                rank = 'C'
+            case _:
+                rank = 'D'
 
         while True:
             randomWaifu = GetCasteWaifu(rank)

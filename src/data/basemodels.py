@@ -7,7 +7,7 @@ class User(BaseModel):
     avatarURL: Optional[str]
     totalValue: str
     userId: str
-
+    serverid: Optional[str]
 
 class Waifu(BaseModel):
     favourites: int
@@ -16,3 +16,4 @@ class Waifu(BaseModel):
     sacrificed: int = 0  # 0 for alive, 1 for has been sacrificed
     claimerId: Optional[str]
     claimerUser: Optional[User]
+    serverid: Optional[str]
