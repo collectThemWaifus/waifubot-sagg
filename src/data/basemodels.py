@@ -5,7 +5,7 @@ from pydantic import BaseModel
 class User(BaseModel):
     name: Optional[str]
     avatarURL: Optional[str]
-    totalValue: str
+    totalValue: int
     userId: str
     serverid: Optional[str]
 

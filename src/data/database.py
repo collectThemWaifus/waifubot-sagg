@@ -1,10 +1,11 @@
 import os
+from pickle import TRUE
 from typing import List
 from sqlalchemy.engine import Engine
 from sqlalchemy.sql.expression import text
 from data.basemodels import Waifu, User
 from sqlalchemy.engine import create_engine
-
+from sqlalchemy.orm import Session
 from sqlalchemy.engine.url import URL
 
 
@@ -37,15 +38,16 @@ def databaseSetup():
             imageURL VARCHAR(100) NOT NULL,
             favourites MEDIUMINT NOT NULL,
             time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            sacrificed INT DEFAULT 0,
-            PRIMARY KEY (userid, time)
+            serverid VARCHAR(18),
+            PRIMARY KEY (userid, serverid, time)
         );
     '''
     sql_UserTable = '''
         CREATE TABLE IF NOT EXISTS userTable (
             userid CHAR(38) NOT NULL,
             totalpoints BIGINT,
-            PRIMARY KEY (userid) 
+            serverid VARCHAR(18),
+            PRIMARY KEY (userid, serverid) 
         );
     '''
     createList = [sql_waifuUserTable, sql_UserTable]
@@ -54,15 +56,36 @@ def databaseSetup():
             connection.execute(text(sql))
     print("Tables Ready!")
 
-
+def updateUser(waifu : Waifu, userid : int):
+    sql_addUser = """
+    INSERT INTO userTable (userid, totalpoints, serverid)
+        VALUES (:userid, :totalpoints, :serverid)
+    """
+    sql_updateUser = """
+    UPDATE INTO userTable (totalpoints)
+        VALUES ( :totalpoints )
+        WHERE userid = :userid AND serverid = :serverid
+    """
+    sqlQuery = sql_addUser
+    valueOfUser = waifu.favourites
+    user = getUserFromId(userid)
+    if (user is not None):
+        sqlQuery = sql_updateUser
+        valueOfUser += user.totalValue
+    getEngine().execute(text(sqlQuery),
+        {"userid":userid, "totalpoints":valueOfUser, "serverid": user.serverid} ) 
 def storeWaifu(waifu: Waifu, userid: str):
-    sql_storeWaifu = "INSERT INTO userWaifu (userid, name, imageURL , favourites) VALUES (:userid, :name, :imageURL, :favourites)"
+    updateUser(waifu, userid)
+    sql_storeWaifu = """
+    INSERT INTO userWaifu (userid, name, imageURL , favourites, serverid)
+        VALUES (:userid, :name, :imageURL, :favourites, :serverid)
+    """
     getEngine().execute(text(sql_storeWaifu), {
-        "userid": userid, "name": waifu.name, "imageURL": waifu.imageURL, "favourites": waifu.favourites})
+        "userid": userid, "name": waifu.name, "imageURL": waifu.imageURL, "favourites": waifu.favourites, "serverid":waifu.serverid})
 
 
 def getWaifu(userid: str) -> List[Waifu]:
-    sql_storeWaifu = "SELECT name, imageURL, favourites FROM userWaifu WHERE userid = :userid"
+    sql_storeWaifu = "SELECT name, imageURL, favourites, serverid FROM userWaifu WHERE userid = :userid"
     result = getEngine().execute(
         text(sql_storeWaifu), {"userid": userid}).all()
     listOfWaifu = []

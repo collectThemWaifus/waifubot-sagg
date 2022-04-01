@@ -6,9 +6,10 @@ import discord
 from discord.ext import commands
 from discord import Embed
 from discord import Colour
+from data.basemodels import Waifu
 
 from data.collection import GetCasteWaifu
-from data.database import storeWaifu, checkWaifuDuplicate
+from data.database import storeUser, storeWaifu, checkWaifuDuplicate
 
 
 class claimWaifu(commands.Cog):
@@ -77,6 +78,7 @@ class claimWaifu(commands.Cog):
             randomWaifu = GetCasteWaifu(rank)
             if not(checkWaifuDuplicate(randomWaifu.name)):
                 break
+        randomWaifu.serverid = ctx.guild.id
         embed = Embed(
             title='Unclaimed',
             description='Unclaimed',
