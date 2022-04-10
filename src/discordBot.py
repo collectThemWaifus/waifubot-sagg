@@ -6,6 +6,7 @@ from data.database import databaseSetup
 import os
 
 from discord.cogs.bot import bot
+from discord.cogs.leaderboard import leaderboard
 
 
 databaseSetup()
@@ -15,7 +16,7 @@ if (token is None):
 backendURL = os.getenv("BOT_URL")
 if (backendURL is None):
     backendURL = "127.0.0.1:5200"
-
+ 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='-', intents=intents)
 client.config = {}
@@ -25,6 +26,7 @@ client.remove_command('help')
 client.add_cog(claimWaifu(client))
 client.add_cog(inventory(client))
 client.add_cog(bot(client))
+client.add_cog(leaderboard(client))
 
 
 client.run(token)

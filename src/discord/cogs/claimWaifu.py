@@ -9,7 +9,7 @@ from discord import Colour
 from data.basemodels import Waifu
 
 from data.collection import GetCasteWaifu
-from data.database import storeUser, storeWaifu, checkWaifuDuplicate
+from data.database import storeWaifu, checkWaifuDuplicate
 
 
 class claimWaifu(commands.Cog):

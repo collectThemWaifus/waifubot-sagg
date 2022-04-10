@@ -1,5 +1,8 @@
+import discord
 from discord.ext import commands
 from discord import client
+
+from data.database import getAllUsers
 # from discord import Embed
 # from discord import Colour
 
@@ -15,21 +18,15 @@ class leaderboard(commands.Cog):
                 ret += str[i]
         return(ret)
 
-    @commands.command()
-    @commands.has_permissions(manage_guild=True)
-    async def setlb(self, ctx, channel):
-        await ctx.send(f'Set the leaderboard to {channel}')
-        channel = self.getnum(str(channel))
-        channel = int(channel)
-        channel = client.get_channel(channel)
+    @commands.command(aliases = ['lb'])
+    async def leaderboard(self, ctx):
+        loading = discord.Embed(title = f"Loading waifu leaderboard for {ctx.message.guild.id}", colour = discord.Colour.blue())
+        await ctx.send(embed = loading)
+        users = getAllUsers(ctx.message.guild.id)
+        for i in users:
+            print(i)
         # embed = Embed(
         #     title='Help',
         #     description='List of commands for Waifu Bot',
         #     colour=Colour.blue()
         # )
-        await channel.send("test")
-
-    @setlb.error
-    async def setlb_error(ctx, error):
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send("**You dont have permission to do that!**")
