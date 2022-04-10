@@ -1,5 +1,6 @@
 import os
 from pickle import TRUE
+from smtplib import SMTPServerDisconnected
 from typing import List
 from sqlalchemy.engine import Engine
 from sqlalchemy.sql.expression import text
@@ -84,10 +85,10 @@ def storeWaifu(waifu: Waifu, userid: str):
         "userid": userid, "name": waifu.name, "imageURL": waifu.imageURL, "favourites": waifu.favourites, "serverid":waifu.serverid})
 
 
-def getWaifu(userid: str) -> List[Waifu]:
+def getWaifu(userid: str, serverid: int) -> List[Waifu]:
     sql_storeWaifu = "SELECT name, imageURL, favourites, serverid FROM userWaifu WHERE userid = :userid"
     result = getEngine().execute(
-        text(sql_storeWaifu), {"userid": userid}).all()
+        text(sql_storeWaifu), {"userid": userid, "serverid": serverid}).all()
     listOfWaifu = []
     for value in result:
         newWaifu = Waifu(imageURL=value[1], name=value[0], favourites=value[2])
@@ -97,18 +98,19 @@ def getWaifu(userid: str) -> List[Waifu]:
     return listOfWaifu
 
 
-def checkWaifuDuplicate(name: str) -> bool:
-    sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = :name"
+def checkWaifuDuplicate(name: str, serverid: int) -> bool:
+    sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = :name AND serverid :serverid"
     result = getEngine().execute(text(sql_checkWaifuDuplicate),
-                                 {"name": name}).one_or_none()
+                                 {"name": name, "serverid": serverid}).one_or_none()
     if (result is None):
         return False
     return True
 
 
-def getAllUsers() -> List[User]:
-    sql_getUsers = "SELECT DISTINCT userid, SUM(favourites) FROM userWaifu GROUP BY userid ORDER BY SUM(favourites) DESC"
-    result = getEngine().execute(text(sql_getUsers))
+def getAllUsers(serverid: int) -> List[User]:
+    sql_getUsers = """SELECT DISTINCT userid, SUM(favourites) 
+                    FROM userWaifu WHERE serverid=:serverid GROUP BY userid ORDER BY SUM(favourites) DESC"""
+    result = getEngine().execute(text(sql_getUsers), {"serverid": serverid})
     listOfUsers = []
     for value in result.all():
         userId = value[0]
@@ -119,9 +121,9 @@ def getAllUsers() -> List[User]:
     return listOfUsers
 
 
-def getUserFromId(userid: int) -> User:
-    sql_getUsers = "SELECT SUM(favourites) FROM userWaifu WHERE userid=:userid ORDER BY SUM(favourites) DESC"
-    result = getEngine().execute(text(sql_getUsers), {"userid": userid}).one()
+def getUserFromId(userid: int, serverid : int) -> User:
+    sql_getUsers = "SELECT SUM(favourites) FROM userWaifu WHERE userid=:userid AND serverid=:serverid ORDER BY SUM(favourites) DESC"
+    result = getEngine().execute(text(sql_getUsers), {"userid": userid, "serverid": serverid}).one()
     return User(userId=userid, totalValue=result[0])
 
 
