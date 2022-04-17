@@ -99,7 +99,7 @@ def getWaifu(userid: str, serverid: int) -> List[Waifu]:
 
 
 def checkWaifuDuplicate(name: str, serverid: int) -> bool:
-    sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = :name AND serverid :serverid"
+    sql_checkWaifuDuplicate = "SELECT * FROM userWaifu WHERE name = :name AND serverid = :serverid"
     result = getEngine().execute(text(sql_checkWaifuDuplicate),
                                  {"name": name, "serverid": serverid}).one_or_none()
     if (result is None):

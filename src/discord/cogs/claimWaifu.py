@@ -76,7 +76,7 @@ class claimWaifu(commands.Cog):
 
         while True:
             randomWaifu = GetCasteWaifu(rank)
-            if not(checkWaifuDuplicate(randomWaifu.name)):
+            if (not checkWaifuDuplicate(randomWaifu.name, ctx.guild.id)):
                 break
         randomWaifu.serverid = ctx.guild.id
         embed = Embed(
